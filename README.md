@@ -124,8 +124,4 @@ surprise
 
 ## Author
 
-[Nama Anda]
-
-## License
-
-[Jenis Lisensi]
+Reinhart Jens Robert
