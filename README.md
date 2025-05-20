@@ -1,4 +1,4 @@
-#Sistem Rekomendasi Anime
+# Sistem Rekomendasi Anime
 
 Proyek machine learning ini membangun sistem rekomendasi anime menggunakan pendekatan content-based filtering dan collaborative filtering untuk membantu pengguna menemukan anime yang sesuai dengan preferensi mereka.
 
