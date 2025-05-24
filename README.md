@@ -1,51 +1,52 @@
-Sistem Rekomendasi Anime
+# Sistem Rekomendasi Anime
 Proyek Akhir Machine Learning Terapan - Dicoding
-📋 Daftar Isi
+## 📋 Daftar Isi
 
-Project Overview
-Business Understanding
-Dataset
-Instalasi
-Struktur Proyek
-Metodologi
-Hasil dan Evaluasi
-Penggunaan
-Kesimpulan
-Pengembangan Selanjutnya
+- Project Overview
+- Business Understanding
+- Dataset
+- Instalasi
+- Struktur Proyek
+- Metodologi
+- Hasil dan Evaluasi
+- Penggunaan
+- Kesimpulan
+- Pengembangan Selanjutnya
 
-🎯 Project Overview
+## 🎯 Project Overview
 Anime telah menjadi salah satu bentuk hiburan yang sangat populer di seluruh dunia. Dengan ribuan judul anime yang tersedia, pengguna seringkali kesulitan menemukan anime yang sesuai dengan preferensi mereka. Proyek ini bertujuan untuk membangun sistem rekomendasi anime yang dapat memberikan saran personal dan relevan kepada pengguna.
 Sistem ini mengimplementasikan dua pendekatan utama:
 
-Content-Based Filtering: Rekomendasi berdasarkan karakteristik anime (genre, type, dll)
-Collaborative Filtering: Rekomendasi berdasarkan pola rating dan preferensi pengguna lain
+- Content-Based Filtering: Rekomendasi berdasarkan karakteristik anime (genre, type, dll)
+- Collaborative Filtering: Rekomendasi berdasarkan pola rating dan preferensi pengguna lain
 
-🎯 Business Understanding
-Problem Statements
+## 🎯 Business Understanding
+### Problem Statements
 
-Bagaimana cara memberikan rekomendasi anime yang sesuai dengan preferensi pengguna berdasarkan karakteristik anime (genre, type, dll)?
-Bagaimana cara memberikan rekomendasi anime berdasarkan pola rating dan preferensi pengguna lain yang memiliki selera serupa?
-Bagaimana cara mengukur kualitas sistem rekomendasi yang telah dibuat?
+1. Bagaimana cara memberikan rekomendasi anime yang sesuai dengan preferensi pengguna berdasarkan karakteristik anime (genre, type, dll)?
+2. Bagaimana cara memberikan rekomendasi anime berdasarkan pola rating dan preferensi pengguna lain yang memiliki selera serupa?
+3. Bagaimana cara mengukur kualitas sistem rekomendasi yang telah dibuat?
 
-Goals
+## Goals
 
 Mengembangkan sistem rekomendasi Content-Based Filtering yang dapat merekomendasikan anime berdasarkan karakteristik konten
 Mengembangkan sistem rekomendasi Collaborative Filtering yang dapat merekomendasikan anime berdasarkan preferensi pengguna lain
 Mengevaluasi performa kedua sistem rekomendasi menggunakan metrik yang sesuai
 
-📊 Dataset
-Sumber Data
+## 📊 Dataset
+### Sumber Data
 
-Dataset: Anime Recommendations Database
-Sumber: Kaggle - Anime Recommendations Database
-Deskripsi: Dataset berisi informasi anime dan rating dari pengguna MyAnimeList
+- Dataset: Anime Recommendations Database
+- Sumber: https://www.kaggle.com/datasets/CooperUnion/anime-recommendations-database
+- Deskripsi: Dataset berisi informasi anime dan rating dari pengguna MyAnimeList
 
-Struktur Dataset
+### Struktur Dataset
 Dataset Anime (anime.csv)
-KolomDeskripsianime_idID unik untuk setiap animenameNama animegenreGenre anime (dipisahkan koma)typeTipe anime (TV, Movie, OVA, dll)episodesJumlah episoderatingRating rata-rata animemembersJumlah anggota komunitas yang menambahkan anime ke daftar mereka
+Kolom Deskripsi
+anime_idID unik untuk setiap animenameNama animegenreGenre anime (dipisahkan koma)typeTipe anime (TV, Movie, OVA, dll)episodesJumlah episoderatingRating rata-rata animemembersJumlah anggota komunitas yang menambahkan anime ke daftar mereka
 Dataset Rating (rating.csv)
 KolomDeskripsiuser_idID unik penggunaanime_idID anime yang diratingratingRating yang diberikan pengguna (1-10, -1 jika tidak memberikan rating)
-🛠️ Instalasi
+## 🛠️ Instalasi
 Prerequisites
 
 Python 3.7+
@@ -216,9 +217,9 @@ Parallelisasi computation untuk scalability
 Implementation of online learning untuk adaptive recommendations
 
 👨‍💻 Author
-Nama: [Nama Anda]
-Email: [Email Anda]
-LinkedIn: [LinkedIn Profile]
+Nama: Reinhart Jens Robert
+Email: reinhartrobert23@gmail.com
+LinkedIn: Reinhart Jens Robert
 Project: Proyek Akhir Machine Learning Terapan - Dicoding
 📄 License
 This project is licensed under the MIT License - see the LICENSE file for details.
