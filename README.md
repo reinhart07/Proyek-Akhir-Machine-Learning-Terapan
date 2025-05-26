@@ -147,7 +147,7 @@ Hasil evaluasi:
 
 ini
 Copy code
-RMSE = 1.008
+RMSE = 1.3178
 Nilai ini menunjukkan bahwa prediksi model cukup akurat (semakin kecil RMSE semakin baik).
 
 Kesimpulan
