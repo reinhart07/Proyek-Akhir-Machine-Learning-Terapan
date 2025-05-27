@@ -12,11 +12,40 @@
 2. Mengembangkan sistem rekomendasi berbasis kolaboratif (Collaborative Filtering).
 3. Mengukur performa model menggunakan metrik evaluasi seperti RMSE.
 
-### Solution Statements
-- Untuk Content-Based Filtering, digunakan representasi teks genre dengan TF-IDF dan cosine similarity.
-- Untuk Collaborative Filtering, digunakan pendekatan matrix factorization (SVD).
-- Evaluasi dilakukan menggunakan metrik RMSE.
+## Solution Approach
+Untuk menjawab tujuan proyek, pendekatan berikut digunakan:
 
+1. Content-Based Filtering
+Sistem akan merekomendasikan anime berdasarkan kemiripan konten, seperti genre, type (TV, OVA, movie), dan jumlah episode. Pendekatan ini memanfaatkan teknik TF-IDF dan cosine similarity untuk mengukur kemiripan antar anime berdasarkan genre-nya.
+
+**Kelebihan:**
+
+- Tidak tergantung pada aktivitas pengguna lain.
+
+- Cocok untuk pengguna baru (cold-start user problem).
+
+**Kekurangan:**
+
+- Rekomendasi cenderung terbatas pada konten yang mirip.
+
+- Kurang adaptif terhadap perubahan selera pengguna.
+
+2. Collaborative Filtering
+
+Menggunakan pendekatan user-based collaborative filtering, sistem mencari pengguna lain dengan preferensi yang mirip untuk memberikan rekomendasi.
+
+**Kelebihan:**
+
+- Rekomendasi lebih bervariasi dan personal.
+
+- Bisa menemukan anime yang di luar preferensi eksplisit pengguna.
+
+**Kekurangan:**
+
+
+- Tidak bekerja optimal untuk pengguna baru atau item yang belum pernah dirating (cold-start item problem).
+
+- Butuh data rating yang cukup banyak dan bersih.
 ---
 
 ## Data Understanding
@@ -132,33 +161,44 @@ Anime	Predicted Rating
 
 - Hunter x Hunter (2011)	9.13
 
-Evaluation
-Content-Based Filtering
-Tidak dapat dievaluasi dengan metrik prediktif seperti RMSE.
+# Evaluation
 
-Evaluasi dilakukan secara visual dan logis berdasarkan kesamaan genre.
+Evaluasi dilakukan untuk menilai performa sistem rekomendasi berdasarkan dua pendekatan.
 
-Rekomendasi terlihat cukup relevan dan sesuai dengan konten.
+1. Content-Based Filtering
+- Anime Coverage: 73.21% dari total anime
 
-Collaborative Filtering
-Evaluasi menggunakan RMSE (Root Mean Squared Error).
+- Average Precision: 0.6667
 
-Hasil evaluasi:
+- Diversity Score: 0.0877
 
-ini
-Copy code
-RMSE = 1.3178
-Nilai ini menunjukkan bahwa prediksi model cukup akurat (semakin kecil RMSE semakin baik).
+Metode ini berhasil mencakup lebih dari 70% anime yang tersedia dan memiliki precision yang cukup baik. Diversity Score mengindikasikan variasi rekomendasi, meskipun masih cenderung rendah (karena kesamaan genre).
 
-Kesimpulan
-Sistem rekomendasi berhasil dibangun menggunakan dua pendekatan:
+2. Collaborative Filtering
+- Anime Coverage: 35.85%
 
-Content-Based Filtering menggunakan genre anime.
+- User Coverage: 44.36%
 
-Collaborative Filtering menggunakan teknik matrix factorization (SVD).
+- RMSE: 1.3178
 
-Content-Based menghasilkan rekomendasi yang relevan secara konten.
+- MAE: 1.0320
 
-Collaborative Filtering memberikan prediksi rating dengan RMSE 1.3178.
+RMSE dan MAE menunjukkan tingkat kesalahan prediksi rating. Nilai RMSE 1.3178 dan MAE 1.0320 cukup umum dalam domain ini dan bisa ditingkatkan dengan pendekatan hybrid atau model yang lebih kompleks.
 
-Sistem dapat dikembangkan lebih lanjut menggunakan pendekatan hybrid untuk menggabungkan kedua metode dan meningkatkan performa sistem rekomendasi.
+
+# KESIMPULAN
+Dalam proyek ini, dua pendekatan sistem rekomendasi telah berhasil dikembangkan:
+
+- Content-Based Filtering memiliki cakupan lebih luas terhadap koleksi anime dan precision yang tinggi, namun variasi rekomendasinya masih terbatas.
+
+- Collaborative Filtering memberikan rekomendasi berdasarkan preferensi pengguna serupa, dengan performa prediksi yang cukup akurat (RMSE = 1.3178).
+
+Kedua sistem dapat menghasilkan Top-N recommendation yang relevan. Ke depan, sistem ini dapat dikembangkan dengan:
+
+- Pendekatan Hybrid yang menggabungkan keunggulan kedua metode.
+
+- Integrasi fitur tambahan seperti sinopsis, review teks, atau skor popularitas.
+
+- Peningkatan diversity agar rekomendasi lebih bervariasi dan tidak hanya fokus pada genre yang sama.
+
+
