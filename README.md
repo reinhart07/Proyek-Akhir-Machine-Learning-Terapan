@@ -28,10 +28,8 @@ Dataset yang digunakan dalam proyek ini terdiri dari dua file CSV:
 - anime.csv: Berisi informasi tentang anime
 - rating.csv: Berisi rating yang diberikan pengguna untuk anime
 
-Informasi Dataset:
-
-- Dataset Anime: 12,294 rows × 7 columns
-- Dataset Rating: 7,813,737 rows × 3 columns
+Dataset ini berasal dari:
+📌 https://www.kaggle.com/datasets/CooperUnion/anime-recommendations-database
 
 Variabel-variabel pada dataset adalah sebagai berikut:
 Dataset Anime (anime.csv):
@@ -49,6 +47,22 @@ Dataset Rating (rating.csv):
 - user_id: ID unik untuk setiap pengguna
 - anime_id: ID anime yang dirating
 - rating: Rating yang diberikan pengguna (skala 1-10, -1 untuk tidak dirating)
+
+  Kondisi Data Awal
+1. anime.csv:
+
+- Jumlah data: 12.294 baris, 7 kolom yaitu anime_id, name, genre, type, episodes, rating, members.
+
+- Missing values:
+  - genre: 62 nilai kosong
+  - type: 25 nilai kosong
+  - rating: 230 nilai kosong
+
+Kondisi Data Awal 
+2.  rating.csv
+- Jumlah baris: 1.963.739, 3 kolom yaitu user_id, anime_id, dan rating
+- Tidak ada nilai kosong
+
 
 ### Exploratory Data Analysis:
 Dari analisis eksploratori data, diperoleh insight sebagai berikut:
@@ -85,70 +99,94 @@ Statistik Dataset:
 - Standardisasi format: Mengubah genre menjadi format lowercase dan mengganti spasi dengan underscore
 - Alasan: TF-IDF vectorizer memerlukan format teks yang konsisten untuk hasil yang optimal
 
+Fitur baru bernama `content_features` dibuat dengan menggabungkan informasi dari `genre` dan `type`. Fitur ini diproses dengan lowercasing, penghapusan spasi, dan digabungkan sebagai satu string untuk mewakili konten setiap anime.
+
+Dilakukan filtering untuk meningkatkan kualitas data:
+- Hanya menyertakan anime yang memiliki setidaknya 20 rating dari user.
+- Hanya menyertakan user yang memberikan setidaknya 50 rating.
+
+User-item matrix dibentuk dari data rating yang sudah difilter. Matriks ini digunakan sebagai input untuk Collaborative Filtering berbasis algoritma k-Nearest Neighbors.
+
+#### Transformasi Fitur Teks untuk Content-Based Filtering
+
+Untuk membangun sistem Content-Based Filtering, dilakukan penggabungan kolom `genre` dan `type` menjadi fitur baru bernama `content_features`. Kolom ini menyimpan informasi deskriptif tentang anime yang akan digunakan dalam pemodelan berbasis konten.
+
+Selanjutnya, `content_features` diubah menjadi representasi numerik menggunakan **TF-IDF Vectorizer**. Teknik ini mengubah teks menjadi vektor berdasarkan frekuensi kata, dengan mengurangi bobot kata-kata umum (stopwords). Parameter `max_features=5000` digunakan untuk membatasi jumlah fitur.
+
+Hasil akhir dari proses ini adalah **TF-IDF matrix**, yaitu representasi vektor dari setiap anime berdasarkan kontennya. Matrix ini akan digunakan dalam perhitungan cosine similarity pada algoritma Content-Based Filtering.
+
+
 ## Modeling
 ### 1. Content-Based Filtering
-Algoritma yang digunakan:
 
-TF-IDF Vectorization: Mengubah fitur teks (genre dan tipe) menjadi vektor numerik
-Cosine Similarity: Menghitung kesamaan antar anime berdasarkan vektor TF-IDF
+Model Content-Based Filtering memanfaatkan hasil transformasi `content_features` (yang telah diubah menjadi vektor melalui TF-IDF) untuk menghitung kemiripan antar anime berdasarkan cosine similarity. Dengan demikian, sistem dapat merekomendasikan anime yang mirip dengan anime yang disukai user.
 
-Cara Kerja:
-python
+#### Contoh Hasil Rekomendasi:
 
-    class ContentBasedRecommender:
+Berikut adalah contoh Top-5 rekomendasi anime berdasarkan input anime *"Death Note"*:
 
-    def fit(self):
+1. Otaku no Seiza  
+2. Lupin Shanshei  
+3. Mobile Police Patlabor: MiniPato 
+4. Scramble Wars: Tsuppashire! Genom Trophy Rally  
+5. CB Chara Go Nagai World
 
-        tfidf = TfidfVectorizer(stop_words='english', max_features=5000)
-        self.tfidf_matrix = tfidf.fit_transform(self.anime_df['content_features'])
-        self.cosine_sim = cosine_similarity(self.tfidf_matrix, self.tfidf_matrix)
+#### Kelebihan:
+- Tidak memerlukan data user lain (mengatasi cold start untuk user baru)
+- Dapat menjelaskan mengapa suatu anime direkomendasikan
+- Tidak bergantung pada sparsity rating
 
-Kelebihan:
-
-- Tidak memerlukan data user lain (mengatasi cold start problem untuk user baru)
-- Dapat memberikan penjelasan mengapa anime direkomendasikan
-- Tidak terpengaruh oleh sparsity data rating
-
-Kekurangan:
-
-- Terbatas pada fitur yang tersedia (genre, tipe)
-- Tidak dapat menemukan pola preferensi yang complex
+#### Kekurangan:
+- Terbatas pada fitur yang tersedia (genre, type)
+- Kurang mampu menangkap preferensi kompleks
 - Rentan terhadap over-specialization
 
+
 ### 2. Collaborative Filtering (User-User)
-Algoritma yang digunakan:
 
-- User-User Similarity: Menghitung kesamaan antar pengguna menggunakan cosine similarity
-- Weighted Average Prediction: Prediksi rating berdasarkan rating dari pengguna serupa
+Model Collaborative Filtering ini menggunakan pendekatan berbasis user-user similarity. Setelah data rating difilter (anime minimal dirating 20 user, user minimal memberi 50 rating), sistem membentuk **user-item matrix**. Kemudian, digunakan algoritma k-Nearest Neighbors (kNN) untuk mencari user yang memiliki pola rating serupa.
 
-Cara Kerja:
+Dari user serupa ini, sistem merekomendasikan anime yang disukai user lain tapi belum pernah ditonton oleh user target.
 
-python
+#### Contoh Hasil Rekomendasi:
 
-    def get_user_recommendations(self, user_id, n_recommendations=10):
-          # Hitung similarity antar user
-          user_sim_scores = self.user_similarity[user_idx]
-          
-          # Prediksi rating dengan weighted average
-          predicted_rating = numerator / denominator
+Berikut contoh top-5 rekomendasi anime untuk user dengan ID **12345**:
 
-Kelebihan:
+1. Kimi no Na wa. 
+2. Gintama°  
+3. Ginga Eiyuu Densetsu  
+4.  Steins;Gate  
+5.  Hunter x Hunter (2011)
 
-- Dapat menemukan pola preferensi yang complex
-- Memanfaatkan wisdom of crowds
-- Tidak memerlukan analisis konten yang mendalam
+#### Kelebihan:
+- Mampu menangkap preferensi pengguna yang kompleks
+- Rekomendasi bersifat personal
 
-Kekurangan:
+#### Kekurangan:
+- Mengalami masalah cold start untuk user baru
+- Performa tergantung pada jumlah data interaksi yang tersedia
 
-- Memerlukan data rating yang cukup (cold start problem)
-- Komputasi intensive untuk dataset besar
-- Terpengaruh oleh sparsity data
 
 ### Top-N Recommendation Output:
 Kedua sistem berhasil menghasilkan top-5 recommendations:
 
 - Content-Based: Merekomendasikan anime dengan genre serupa dengan "Death Note"
 - Collaborative Filtering: Merekomendasikan anime berdasarkan preferensi pengguna serupa
+
+Top 5 hasil rekomendasi Content-Based Filtering anime dengan genre serupa dengan "Death Note":
+1. Otaku no Seiza
+2. Lupin Shanshei
+3. Mobile Police Patlabor: MiniPato
+4. Scramble Wars: Tsuppashire! Genom Trophy Rally
+5. CB Chara Go Nagai World
+
+Top 5 hasil rekomendasi Collaborative Filtering untuk user 3:
+1.  Kimi no Na wa.
+2. Gintama°
+3. Ginga Eiyuu Densetsu
+4. Steins;Gate
+5. Hunter x Hunter (2011)
+
 
 ## Evaluation
 ### 1. Content-Based Filtering
