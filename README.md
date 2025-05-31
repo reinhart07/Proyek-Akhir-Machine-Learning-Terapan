@@ -63,6 +63,23 @@ Kondisi Data Awal
 - Jumlah baris: 1.963.739, 3 kolom yaitu user_id, anime_id, dan rating
 - Tidak ada nilai kosong
 
+**Dataset Rating:**
+
+Terdapat dua versi data rating yang digunakan dalam analisis:
+
+1. **Data Rating Lengkap**:
+   - Jumlah baris: 7.813.737
+   - Jumlah kolom: 3
+   - Kolom: user_id, anime_id, rating
+
+2. **Data Rating yang Digunakan untuk Analisis**:
+   - Jumlah baris: 1.967.911  
+   - Jumlah kolom: 3
+   - Kolom: user_id, anime_id, rating
+   - Keterangan: [Subset dari data lengkap/file terpisah]
+
+Untuk keperluan analisis dan efisiensi komputasi, digunakan dataset rating dengan 1.967.911 baris.
+
 
 ### Exploratory Data Analysis:
 Dari analisis eksploratori data, diperoleh insight sebagai berikut:
@@ -166,6 +183,14 @@ Berikut contoh top-5 rekomendasi anime untuk user dengan ID **12345**:
 - Mengalami masalah cold start untuk user baru
 - Performa tergantung pada jumlah data interaksi yang tersedia
 
+## Keluaran untuk Content-Based Filtering dan Collaborative Filtering tidak bisa memiliki format yang sama dalam hal menampilkan "Predicted Rating"/"Similarity Score" Kenapa?
+ karena kedua model menghasilkan jenis output yang berbeda:
+
+Content-Based Filtering: Model ini menghitung kesamaan (similarity) antara anime berdasarkan fitur-fitur kontennya (genre, tipe). Outputnya adalah skor yang menunjukkan seberapa mirip anime rekomendasi dengan anime yang menjadi input. Model ini tidak memprediksi rating yang mungkin diberikan user terhadap anime rekomendasi. Oleh karena itu, kolom yang relevan untuk ditampilkan adalah similarity_score.
+
+Collaborative Filtering: Model ini memprediksi rating yang mungkin diberikan seorang user terhadap anime yang belum ditonton, berdasarkan preferensi user lain yang serupa. Outputnya adalah nilai prediksi rating (predicted rating). Oleh karena itu, kolom yang relevan untuk ditampilkan adalah predicted_rating.
+
+Menggunakan "Predicted Rating" untuk output Content-Based Filtering akan menyebabkan error karena kolom tersebut memang tidak ada dalam hasil rekomendasi Content-Based Filtering. Setiap model memberikan informasi yang berbeda, sehingga format tampilan outputnya pun perlu disesuaikan dengan informasi yang diberikan oleh model tersebut.
 
 ### Top-N Recommendation Output:
 Kedua sistem berhasil menghasilkan top-5 recommendations:
