@@ -192,6 +192,14 @@ Collaborative Filtering: Model ini memprediksi rating yang mungkin diberikan seo
 
 Menggunakan "Predicted Rating" untuk output Content-Based Filtering akan menyebabkan error karena kolom tersebut memang tidak ada dalam hasil rekomendasi Content-Based Filtering. Setiap model memberikan informasi yang berbeda, sehingga format tampilan outputnya pun perlu disesuaikan dengan informasi yang diberikan oleh model tersebut.
 
+Content-Based = Similarity (kemiripan fitur)
+
+Collaborative = Prediction (prediksi preferensi user)
+Ini konsep fundamental yang berbeda:
+
+- CBF: "Anime ini mirip dengan yang kamu suka"
+- CF: "Kamu akan suka anime ini dengan rating X"
+
 ### Top-N Recommendation Output:
 Kedua sistem berhasil menghasilkan top-5 recommendations:
 
