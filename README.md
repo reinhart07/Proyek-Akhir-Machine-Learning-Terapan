@@ -1,294 +1,333 @@
-# Laporan Proyek Machine Learning - Reinhart Jens Robert
+#  Sistem Rekomendasi Anime - Reinhart Jens Robert
+
 ## Project Overview
-Industri hiburan digital, khususnya anime, telah mengalami pertumbuhan yang signifikan dalam beberapa tahun terakhir. Dengan ribuan judul anime yang tersedia di berbagai platform streaming, pengguna sering menghadapi kesulitan dalam menemukan anime yang sesuai dengan preferensi mereka. Fenomena "choice overload" ini dapat mengurangi kepuasan pengguna dan engagement pada platform.
-Sistem rekomendasi telah terbukti efektif dalam mengatasi masalah ini dengan menyediakan saran yang dipersonalisasi berdasarkan preferensi dan perilaku pengguna. Netflix melaporkan bahwa 80% konten yang ditonton pengguna berasal dari sistem rekomendasi mereka, yang menunjukkan pentingnya teknologi ini dalam industri entertainment.
-Proyek ini bertujuan untuk mengembangkan sistem rekomendasi anime yang dapat membantu pengguna menemukan anime baru berdasarkan karakteristik konten (content-based filtering) dan preferensi pengguna serupa (collaborative filtering). Implementasi kedua pendekatan ini akan memberikan rekomendasi yang lebih komprehensif dan akurat.
+
+Dalam era digital saat ini, jumlah konten hiburan seperti anime terus meningkat pesat. Dengan ribuan judul anime yang tersedia, pengguna sering mengalami kesulitan dalam menemukan anime yang sesuai dengan preferensi mereka. Fenomena ini dikenal sebagai "information overload" dimana terlalu banyak pilihan justru membuat pengambilan keputusan menjadi sulit.
+Sistem rekomendasi telah menjadi solusi yang sangat efektif untuk mengatasi masalah ini. Platform seperti Netflix, Crunchyroll, dan MyAnimeList menggunakan sistem rekomendasi untuk membantu pengguna menemukan konten yang relevan dengan preferensi mereka. Hal ini tidak hanya meningkatkan kepuasan pengguna, tetapi juga meningkatkan engagement dan retention pada platform tersebut.
+royek ini penting untuk diselesaikan karena:
+
+1. Meningkatkan User Experience: Membantu pengguna menemukan anime yang sesuai dengan preferensi mereka dengan lebih efisien
+2. Mengatasi Information Overload: Mengurangi waktu yang dibutuhkan pengguna untuk mencari anime yang menarik
+3. Personalisasi: Memberikan rekomendasi yang dipersonalisasi berdasarkan karakteristik anime dan pola preferensi pengguna
+4. Business Value: Sistem rekomendasi yang baik dapat meningkatkan engagement dan monetisasi platform
+
 
 ## Business Understanding
-### Problem Statements
+Berdasarkan analisis kebutuhan pengguna dan tantangan dalam industri anime streaming, masalah utama yang ingin diselesaikan adalah:
 
-1. Information Overload: Pengguna menghadapi kesulitan dalam menemukan anime yang sesuai dengan preferensi mereka dari ribuan judul yang tersedia, yang dapat menyebabkan frustrasi dan mengurangi engagement.
-2. Personalisasi Rekomendasi: Platform anime membutuhkan sistem yang dapat memberikan rekomendasi yang dipersonalisasi berdasarkan karakteristik anime (genre, tipe) dan perilaku pengguna sebelumnya.
-3. Cold Start Problem: Bagaimana memberikan rekomendasi yang relevan untuk anime baru yang belum memiliki banyak rating atau untuk pengguna baru yang belum memiliki riwayat rating.
+1. Kesulitan Discovery: Bagaimana cara membantu pengguna menemukan anime baru yang sesuai dengan preferensi mereka dari ribuan judul yang tersedia?
+2. Personalisasi Rekomendasi: Bagaimana cara memberikan rekomendasi yang dipersonalisasi berdasarkan karakteristik anime (genre, tipe, rating) dan pola preferensi pengguna?
+3. Cold Start Problem: Bagaimana cara memberikan rekomendasi yang relevan untuk pengguna baru yang belum memiliki riwayat rating atau preferensi?
 
-### Goals
+**Goals:**
+Tujuan dari proyek ini adalah:
 
-1. Mengembangkan sistem rekomendasi content-based yang dapat merekomendasikan anime berdasarkan kesamaan karakteristik konten seperti genre dan tipe anime.
-2. Mengimplementasikan sistem collaborative filtering yang dapat memberikan rekomendasi berdasarkan preferensi pengguna dengan pola rating yang serupa.
-3. Menghasilkan Top-N recommendations yang akurat dan relevan untuk meningkatkan pengalaman pengguna dalam menemukan anime baru.
+1. Mengembangkan sistem rekomendasi hybrid yang dapat memberikan rekomendasi anime yang akurat dan relevan dengan menggabungkan pendekatan Content-Based Filtering dan Collaborative Filtering.
+2. Meningkatkan akurasi rekomendasi dengan memanfaatkan informasi konten anime (genre, tipe) dan pola rating pengguna untuk menghasilkan rekomendasi yang lebih personal dan relevan.
+3. Mengatasi keterbatasan masing-masing metode dengan memanfaatkan kelebihan dari kedua pendekatan untuk menciptakan sistem yang lebih robust dan komprehensif.
 
-### Solution Statements
+### Solution Approach
+Untuk mencapai goals yang telah ditetapkan, proyek ini akan mengimplementasikan dua pendekatan sistem rekomendasi:
+1. Content-Based Filtering
+Pendekatan ini merekomendasikan anime berdasarkan kesamaan karakteristik konten dengan anime yang disukai pengguna sebelumnya.
 
-1. Content-Based Filtering menggunakan TF-IDF dan Cosine Similarity: Sistem ini akan menganalisis fitur konten anime (genre, tipe) menggunakan TF-IDF vectorization dan menghitung kesamaan menggunakan cosine similarity untuk memberikan rekomendasi berdasarkan karakteristik anime yang disukai pengguna.
-2. Collaborative Filtering menggunakan User-User Similarity: Sistem ini akan menggunakan cosine similarity untuk menemukan pengguna dengan preferensi serupa dan memberikan rekomendasi berdasarkan anime yang disukai oleh pengguna serupa tersebut.
+Metode yang digunakan:
 
-## Data Understading
-Dataset yang digunakan dalam proyek ini terdiri dari dua file CSV:
+- TF-IDF Vectorization: Untuk mengubah fitur kategoris (genre, tipe) menjadi representasi numerik
+- Cosine Similarity: Untuk mengukur kesamaan antar anime berdasarkan fitur konten
 
-- anime.csv: Berisi informasi tentang anime
-- rating.csv: Berisi rating yang diberikan pengguna untuk anime
+Kelebihan:
 
-Dataset ini berasal dari:
-📌 https://www.kaggle.com/datasets/CooperUnion/anime-recommendations-database
+- Tidak memerlukan data dari pengguna lain
+- Dapat memberikan rekomendasi untuk anime baru (tidak ada cold start problem untuk item)
+- Rekomendasi dapat dijelaskan dengan jelas (explainable)
 
-Variabel-variabel pada dataset adalah sebagai berikut:
-Dataset Anime (anime.csv):
+Kekurangan:
 
-- anime_id: ID unik untuk setiap anime
-- name: Nama anime
-- genre: Genre anime (dapat berupa multiple genre yang dipisahkan koma)
-- type: Tipe anime (TV, Movie, OVA, etc.)
-- episodes: Jumlah episode
-- rating: Rating rata-rata anime
-- members: Jumlah anggota komunitas untuk anime tersebut
+- Terbatas pada fitur yang tersedia dalam dataset
+- Cenderung memberikan rekomendasi yang similar (lack of diversity)
+- Tidak dapat menangkap preferensi pengguna yang kompleks
 
-Dataset Rating (rating.csv):
+2. Collaborative Filtering
+Pendekatan ini merekomendasikan anime berdasarkan pola rating dan preferensi pengguna yang memiliki selera similar.
 
-- user_id: ID unik untuk setiap pengguna
-- anime_id: ID anime yang dirating
-- rating: Rating yang diberikan pengguna (skala 1-10, -1 untuk tidak dirating)
+Metode yang digunakan:
 
-  Kondisi Data Awal
-1. anime.csv:
+- Matrix Factorization dengan SVD (Singular Value Decomposition): Untuk mereduksi dimensi dan mengekstrak faktor laten dari user-item matrix
+- Synthetic User Generation: Karena dataset tidak memiliki data user rating, akan dibuat synthetic users berdasarkan popularity dan rating anime
 
-- Jumlah data: 12.294 baris, 7 kolom yaitu anime_id, name, genre, type, episodes, rating, members.
+Kelebihan:
 
-- Missing values:
-  - genre: 62 nilai kosong
-  - type: 25 nilai kosong
-  - rating: 230 nilai kosong
+- Dapat menangkap preferensi kompleks dan pola tersembunyi
+- Tidak bergantung pada fitur konten
+- Dapat memberikan rekomendasi yang unexpected dan diverse
 
-Kondisi Data Awal 
-2.  rating.csv
-- Jumlah baris: 1.963.739, 3 kolom yaitu user_id, anime_id, dan rating
-- Tidak ada nilai kosong
+Kekurangan:
 
-**Dataset Rating:**
+- Memerlukan data rating dari banyak pengguna
+- Cold start problem untuk pengguna dan item baru
+- Sulit untuk dijelaskan (black box)
 
-Terdapat dua versi data rating yang digunakan dalam analisis:
+3. Hybrid Approach
+Menggabungkan kedua pendekatan di atas untuk memanfaatkan kelebihan masing-masing dan mengurangi kelemahan individual.
 
-1. **Data Rating Lengkap**:
-   - Jumlah baris: 7.813.737
-   - Jumlah kolom: 3
-   - Kolom: user_id, anime_id, rating
+# Data Understanding
+## 1. DATA LOADING DAN EXPLORATORY DATA ANALYSIS
 
-2. **Data Rating yang Digunakan untuk Analisis**:
-   - Jumlah baris: 1.967.911  
-   - Jumlah kolom: 3
-   - Kolom: user_id, anime_id, rating
-   - Keterangan: [Subset dari data lengkap/file terpisah]
+### Informasi Umum Dataset
+1. Dataset terdiri dari 12.294 baris dan 7 kolom, artinya ada 12.294 data anime yang dianalisis.
 
-Untuk keperluan analisis dan efisiensi komputasi, digunakan dataset rating dengan 1.967.911 baris.
+2. Masing-masing baris merepresentasikan satu judul anime dengan informasi terkait seperti genre, tipe, episode, rating, dan jumlah anggota.
 
+### 5 Data Teratas
+1. Contoh data teratas mencakup anime populer seperti Kimi no Na wa., Fullmetal Alchemist: Brotherhood, dan Gintama°, Steins;Gate, Gintama&#039;  
 
-### Exploratory Data Analysis:
-Dari analisis eksploratori data, diperoleh insight sebagai berikut:
+2. Informasi yang diberikan meliputi judul anime, genre, tipe (TV/Movie), jumlah episode, rating, dan jumlah anggota yang menambahkan anime ke daftar mereka.
 
-- Distribusi rating anime cenderung normal dengan puncak sekitar rating 7-8
-- Tipe anime didominasi oleh TV series (sekitar 60%), diikuti Movie dan OVA
-- Genre paling populer adalah Comedy, Action, dan Drama
-- Distribusi rating dari user menunjukkan bias positif, dengan kebanyakan - pengguna memberikan rating tinggi (8-10)
-- Matrix sparsity sangat tinggi (99.98%), yang merupakan tantangan umum dalam collaborative filtering
 
-Statistik Dataset:
+### Struktur dan Tipe Data
+1. Kolom anime_id, members bertipe integer.
 
-- Jumlah anime unik: 12294
-- Jumlah user unik: 19094
-- Total rating: 1967911
-- Rata-rata rating per anime: 160.07
-- Rata-rata rating per user: 103.06
+2. Kolom rating bertipe float.
 
-## Data Preparation
+3. Kolom name, genre, type, dan episodes bertipe object (teks).
 
-- Missing values pada rating anime: 230 anime tidak memiliki rating, dihapus karena diperlukan untuk content-based filtering
-- Missing values pada genre: Diisi dengan 'Unknown' untuk menjaga konsistensi data
-- Alasan: Rating dan genre adalah fitur penting untuk sistem rekomendasi, sehingga data yang tidak lengkap dapat mempengaruhi kualitas rekomendasi
+4. Jumlah data kosong (missing values) cukup kecil, hanya ada:
 
-- Rating -1: Menghapus 373148 rating dengan nilai -1 yang menandakan pengguna tidak memberikan rating
-- Alasan: Rating -1 tidak memberikan informasi preferensi yang berguna untuk collaborative filtering
+  - 62 nilai kosong pada genre (sekitar 0,5%)
 
+  - 25 nilai kosong pada type (sekitar 0,2%)
 
+  - 230 nilai kosong pada rating (sekitar 1,87%)
 
-- Common anime IDs: Memastikan hanya anime yang ada di kedua dataset yang digunakan
-- Final dataset: 9000 anime dan 1594762 rating
-- Alasan: Konsistensi data penting untuk menghindari error saat melakukan join antar dataset
+5. Tidak ada data duplikat
 
-- Standardisasi format: Mengubah genre menjadi format lowercase dan mengganti spasi dengan underscore
-- Alasan: TF-IDF vectorizer memerlukan format teks yang konsisten untuk hasil yang optimal
+### Statistik Deskriptif
+1. Rating anime memiliki nilai rata-rata sekitar 6.47, dengan minimum 1.67 dan maksimum 10.0.
 
-Fitur baru bernama `content_features` dibuat dengan menggabungkan informasi dari `genre` dan `type`. Fitur ini diproses dengan lowercasing, penghapusan spasi, dan digabungkan sebagai satu string untuk mewakili konten setiap anime.
+2. Jumlah anggota sangat bervariasi, dengan median sekitar 1.550, tapi bisa mencapai lebih dari 1 juta pada anime yang sangat populer.
 
-Dilakukan filtering untuk meningkatkan kualitas data:
-- Hanya menyertakan anime yang memiliki setidaknya 20 rating dari user.
-- Hanya menyertakan user yang memberikan setidaknya 50 rating.
+3. Distribusi members menunjukkan banyak anime yang kurang dikenal (dengan sedikit anggota) dan segelintir anime yang sangat populer.
 
-User-item matrix dibentuk dari data rating yang sudah difilter. Matriks ini digunakan sebagai input untuk Collaborative Filtering berbasis algoritma k-Nearest Neighbors.
+## Penjelasan visualisasi 
+1. Distribusi Rating Anime
+Mayoritas anime memiliki rating antara 6 dan 7, membentuk distribusi normal.
 
-#### Transformasi Fitur Teks untuk Content-Based Filtering
+2. Distribusi Tipe Anime
+Tipe anime paling banyak adalah TV (30.9%), disusul OVA (27%) dan Movie (19.1%).
 
-Untuk membangun sistem Content-Based Filtering, dilakukan penggabungan kolom `genre` dan `type` menjadi fitur baru bernama `content_features`. Kolom ini menyimpan informasi deskriptif tentang anime yang akan digunakan dalam pemodelan berbasis konten.
+3. Top 10 Genre Terpopuler
+Genre paling populer adalah Comedy, diikuti Action dan Adventure.
 
-Selanjutnya, `content_features` diubah menjadi representasi numerik menggunakan **TF-IDF Vectorizer**. Teknik ini mengubah teks menjadi vektor berdasarkan frekuensi kata, dengan mengurangi bobot kata-kata umum (stopwords). Parameter `max_features=5000` digunakan untuk membatasi jumlah fitur.
+4. Distribusi Jumlah Episode (≤50)
+Kebanyakan anime memiliki jumlah episode sedikit, terutama di bawah 10 episode.
 
-Hasil akhir dari proses ini adalah **TF-IDF matrix**, yaitu representasi vektor dari setiap anime berdasarkan kontennya. Matrix ini akan digunakan dalam perhitungan cosine similarity pada algoritma Content-Based Filtering.
+5. Rating vs Jumlah Members
+Terdapat kecenderungan bahwa anime dengan lebih banyak anggota cenderung memiliki rating yang lebih tinggi.
+6. Top 10 Anime Rating Tertinggi
+Anime dengan rating tertinggi adalah Gintama, Steins;Gate, dan Yakusoku: Africa Mizu to Midori.
 
+7. Korelasi Antar Variabel Numerik
+Terdapat korelasi sedang antara rating dan jumlah members (0.39), sedangkan korelasi dengan jumlah episode sangat lemah.
 
-## Modeling
-### 1. Content-Based Filtering
+# 3. DATA PREPARATION
+### 3.1 Data Cleaning
+Membersihkan data dan menangani missing values untuk persiapan modeling.
 
-Model Content-Based Filtering memanfaatkan hasil transformasi `content_features` (yang telah diubah menjadi vektor melalui TF-IDF) untuk menghitung kemiripan antar anime berdasarkan cosine similarity. Dengan demikian, sistem dapat merekomendasikan anime yang mirip dengan anime yang disukai user.
+1. Handle Missing Values (Menangani Data Kosong)
+- Awalnya terdapat 317 data kosong di seluruh kolom.
 
-#### Contoh Hasil Rekomendasi:
+- Baris dengan nilai rating kosong dihapus karena rating penting untuk sistem rekomendasi (misalnya collaborative filtering).
 
-Berikut adalah contoh Top-5 rekomendasi anime berdasarkan input anime *"Death Note"*:
+- Nilai kosong pada kolom genre diisi dengan string "Unknown".
 
-1. Otaku no Seiza  
-2. Lupin Shanshei  
-3. Mobile Police Patlabor: MiniPato 
-4. Scramble Wars: Tsuppashire! Genom Trophy Rally  
-5. CB Chara Go Nagai World
+- Kolom episodes yang berisi teks seperti "Unknown" dikonversi ke numerik (episodes_numeric), lalu nilai yang tidak bisa dikonversi (NaN) diganti dengan median dari kolom tersebut.
 
-#### Kelebihan:
-- Tidak memerlukan data user lain (mengatasi cold start untuk user baru)
-- Dapat menjelaskan mengapa suatu anime direkomendasikan
-- Tidak bergantung pada sparsity rating
+- Setelah ini, tidak ada lagi missing values.
 
-#### Kekurangan:
-- Terbatas pada fitur yang tersedia (genre, type)
-- Kurang mampu menangkap preferensi kompleks
-- Rentan terhadap over-specialization
+2. Remove Duplicates (Menghapus Duplikasi)
+- Dilakukan penghapusan baris duplikat agar tidak mengganggu proses analisis.
 
+- Setelah proses ini, jumlah data menjadi 12.064 baris dan 8 kolom.
 
-### 2. Collaborative Filtering (User-User)
+3. Filter Berdasarkan Jumlah Members
+- Data difilter agar hanya menyertakan anime yang memiliki minimal 1000 members, untuk menghindari data yang terlalu jarang dinilai.
 
-Model Collaborative Filtering ini menggunakan pendekatan berbasis user-user similarity. Setelah data rating difilter (anime minimal dirating 20 user, user minimal memberi 50 rating), sistem membentuk **user-item matrix**. Kemudian, digunakan algoritma k-Nearest Neighbors (kNN) untuk mencari user yang memiliki pola rating serupa.
+- Setelah filter ini, jumlah data berkurang menjadi 6.791 baris.
 
-Dari user serupa ini, sistem merekomendasikan anime yang disukai user lain tapi belum pernah ditonton oleh user target.
+4. Normalisasi Rating
+- Kolom rating dinormalisasi ke skala 0–1, yang berguna untuk algoritma yang sensitif terhadap skala (seperti KNN atau cosine similarity).
 
-#### Contoh Hasil Rekomendasi:
+- Hasilnya disimpan di kolom baru: rating_normalized.
 
-Berikut contoh top-5 rekomendasi anime untuk user dengan ID **12345**:
+5. Membuat Fitur Konten (Content Features)
+- Untuk keperluan content-based filtering, dibuat fitur content_features dengan menggabungkan isi kolom genre dan type menjadi satu string teks.
 
-1. Kimi no Na wa. 
-2. Gintama°  
-3. Ginga Eiyuu Densetsu  
-4.  Steins;Gate  
-5.  Hunter x Hunter (2011)
+- Ini mempermudah transformasi teks ke vektor fitur seperti TF-IDF.
 
-#### Kelebihan:
-- Mampu menangkap preferensi pengguna yang kompleks
-- Rekomendasi bersifat personal
+Output Akhir
+- Setelah semua proses, dataset akhir memiliki bentuk (shape): 6.791 baris dan 10 kolom.
 
-#### Kekurangan:
-- Mengalami masalah cold start untuk user baru
-- Performa tergantung pada jumlah data interaksi yang tersedia
+- Artinya, data kini bersih, terfilter, dan siap dipakai untuk model rekomendasi baik berbasis konten maupun kolaboratif.
 
-## Keluaran untuk Content-Based Filtering dan Collaborative Filtering tidak bisa memiliki format yang sama dalam hal menampilkan "Predicted Rating"/"Similarity Score" Kenapa?
- karena kedua model menghasilkan jenis output yang berbeda:
+# Modeling
+##  CONTENT-BASED FILTERING
+Content-Based Filtering merekomendasikan item berdasarkan kesamaan karakteristik/fitur dari item tersebut.
+Dalam kasus ini, kita akan menggunakan genre sebagai fitur utama untuk menghitung kesamaan antar anime.
 
-Content-Based Filtering: Model ini menghitung kesamaan (similarity) antara anime berdasarkan fitur-fitur kontennya (genre, tipe). Outputnya adalah skor yang menunjukkan seberapa mirip anime rekomendasi dengan anime yang menjadi input. Model ini tidak memprediksi rating yang mungkin diberikan user terhadap anime rekomendasi. Oleh karena itu, kolom yang relevan untuk ditampilkan adalah similarity_score.
+1. Model & Dataset
+- Model content-based dilatih menggunakan 6.791 data anime yang telah dibersihkan dan disiapkan sebelumnya.
 
-Collaborative Filtering: Model ini memprediksi rating yang mungkin diberikan seorang user terhadap anime yang belum ditonton, berdasarkan preferensi user lain yang serupa. Outputnya adalah nilai prediksi rating (predicted rating). Oleh karena itu, kolom yang relevan untuk ditampilkan adalah predicted_rating.
+2. Anime Uji (Testing Input)
+- Anime yang dijadikan acuan: "Kimi no Na wa.", sebuah film drama romantis dengan elemen school dan supernatural.
 
-Menggunakan "Predicted Rating" untuk output Content-Based Filtering akan menyebabkan error karena kolom tersebut memang tidak ada dalam hasil rekomendasi Content-Based Filtering. Setiap model memberikan informasi yang berbeda, sehingga format tampilan outputnya pun perlu disesuaikan dengan informasi yang diberikan oleh model tersebut.
+3. 10 Rekomendasi Teratas
+- Model merekomendasikan anime lain yang memiliki kemiripan genre dan tipe dengan anime input.
 
-Content-Based = Similarity (kemiripan fitur)
+- Beberapa rekomendasi yang muncul:
 
-Collaborative = Prediction (prediksi preferensi user)
-Ini konsep fundamental yang berbeda:
+  - "Aura: Maryuuin Kouga Saigo no Tatakai" dan "Kokoro ga Sakebitagatterunda.", sama-sama bertema drama, romance, school dan berjenis Movie.
 
-- CBF: "Anime ini mirip dengan yang kamu suka"
-- CF: "Kamu akan suka anime ini dengan rating X"
+  - "Clannad Movie" dan "Air Movie" juga direkomendasikan karena kesamaan nuansa emosional dan genre.
 
-### Top-N Recommendation Output:
-Kedua sistem berhasil menghasilkan top-5 recommendations:
+- Nilai similarity_score menunjukkan seberapa mirip kontennya dengan anime input, dengan skor tertinggi 0.96.
 
-- Content-Based: Merekomendasikan anime dengan genre serupa dengan "Death Note"
-- Collaborative Filtering: Merekomendasikan anime berdasarkan preferensi pengguna serupa
+**Kesimpulan**
 
-Top 5 hasil rekomendasi Content-Based Filtering anime dengan genre serupa dengan "Death Note":
-1. Otaku no Seiza
-2. Lupin Shanshei
-3. Mobile Police Patlabor: MiniPato
-4. Scramble Wars: Tsuppashire! Genom Trophy Rally
-5. CB Chara Go Nagai World
+- Sistem content-based berhasil merekomendasikan anime yang secara konten mirip dengan "Kimi no Na wa.", terutama dari sisi tema, genre, dan tipe (Movie).
 
-Top 5 hasil rekomendasi Collaborative Filtering untuk user 3:
-1.  Kimi no Na wa.
-2. Gintama°
-3. Ginga Eiyuu Densetsu
-4. Steins;Gate
-5. Hunter x Hunter (2011)
+- Hasil ini menunjukkan bahwa model cukup efektif dalam mengenali pola konten yang disukai pengguna.
 
+## COLLABORATIVE FILTERING
+Model & Dataset
+- Dibuat user-item matrix sintetis sebagai dasar collaborative filtering.
 
-## Evaluation
-### 1. Content-Based Filtering
-Precision berdasarkan Genre Similarity:
+- Model dilatih menggunakan 1000 pengguna dan 6791 anime.
 
-      Precision = (Jumlah rekomendasi dengan genre serupa) / (Total rekomendasi)
+- Teknik yang digunakan adalah SVD (Singular Value Decomposition), umum untuk collaborative filtering.
 
-- Hasil: Average Precision = 0.6667
-- Interpretasi: 66% rekomendasi memiliki setidaknya satu genre yang sama dengan anime referensi
+Pengujian (Testing)
+- Dilakukan pengujian untuk User ID 0.
 
-Diversity Score:
-      Diversity = (Jumlah genre unik) / (Total rekomendasi)
+- Sistem menghasilkan 10 rekomendasi anime teratas berdasarkan prediksi kesukaan pengguna terhadap anime lain.
 
-- Hasil: Diversity Score = 0.0877
-- Interpretasi: Sistem dapat memberikan variasi genre yang cukup baik
+10 Rekomendasi Teratas
+- Rekomendasi mencakup berbagai genre populer, seperti:
 
-### 2. COLLABORATIVE FILTERING EVALUATION
-Root Mean Square Error (RMSE):
+  - Tonari no Kaibutsu-kun (romance, school)
 
-    RMSE = √(Σ(actual_rating - predicted_rating)² / n)
+  - Suzumiya Haruhi no Yuuutsu (mystery, school, sci-fi)
 
-- Hasil: RMSE = 1.3178
-- Interpretasi: Rata-rata error prediksi adalah 1.71 poin pada skala 1-10
+  - Angel Beats!, Kuroko no Basket, Bakemonogatari, dan Code Geass R2 — anime populer yang secara historis banyak disukai.
 
-Mean Absolute Error (MAE):
-    MAE = Σ|actual_rating - predicted_rating| / n
+- Kolom predicted_rating menunjukkan skor prediksi sistem, yang merepresentasikan seberapa besar kemungkinan pengguna akan menyukai anime tersebut.
 
-- Hasil: MAE = 1.0320
-- Interpretasi: Rata-rata absolut error adalah 1.03 poin
+  - Skor tertinggi: ~3.71, yang menunjukkan preferensi relatif dibandingkan item lain (bukan skala 1–10).
 
-### Coverage Analysis
-**Content-Based Coverage:** 73.21% (9,000/12,294 anime)
+Kesimpulan
+- Collaborative filtering mampu menghasilkan rekomendasi yang dipersonalisasi berdasarkan pola rating pengguna lain.
 
-- Dapat memberikan rekomendasi untuk mayoritas anime dalam dataset
+- Rekomendasi yang muncul umumnya terdiri dari anime dengan rating tinggi dan jumlah members besar, yang menunjukkan model cenderung mengutamakan anime populer namun relevan.
 
-**Collaborative Filtering Coverage:**
+- Meskipun tidak memperhatikan konten langsung, pendekatan ini efektif untuk mengenali pola kesukaan pengguna yang mirip.
 
-- Anime Coverage: 35.85% (4.407/12,294 anime)
-- User Coverage: 44.36% (8471/19,094 users)
-- Coverage rendah karena filtering untuk mengurangi sparsity
+# 6. EVALUATION
+### 1. Evaluasi Content-Based Filtering
+- Coverage: 0.0673
 
-================================================================================
-EVALUATION SUMMARY
-================================================================================
+  - Artinya, hanya sekitar 6.73% (457 dari 6791 anime) yang berhasil direkomendasikan oleh model.
 
-1. CONTENT-BASED FILTERING:
-   ✓ Dapat memberikan rekomendasi berdasarkan konten anime
-   ✓ Coverage: 73.21% dari total anime
-   ✓ Average Precision: 0.6667
-   ✓ Diversity Score: 0.0877
+  - Coverage rendah umum terjadi di content-based filtering karena model hanya merekomendasikan anime yang mirip dengan yang sudah dikenal.
 
-2. COLLABORATIVE FILTERING:
-   ✓ Dapat memberikan rekomendasi berdasarkan preferensi user serupa
-   ✓ Anime Coverage: 35.85%
-   ✓ User Coverage: 44.36%
-   ✓ RMSE: 1.3178
-   ✓ MAE: 1.0320
+- Success Rate: 1.0000
 
-3. SYSTEM CHARACTERISTICS:
-   • Total Anime in Dataset: 12,294
-   • Total Users: 19,094
-   • Total Ratings: 1,967,911
-   • Matrix Sparsity: 96.25%
+  - Semua rekomendasi berhasil diberikan untuk user yang diuji (tidak ada error saat mencocokkan konten).
 
-4. RECOMMENDATION CAPABILITIES:
-   • Content-based: Merekomendasikan anime dengan genre/karakteristik serupa
-   • Collaborative: Merekomendasikan anime berdasarkan user dengan preferensi serupa
-   • Kedua sistem dapat memberikan Top-N recommendations
+  - Angka 1.0000 menunjukkan bahwa sistem selalu dapat memberikan rekomendasi sesuai input kontennya.
 
-## Kesimpulan:
-Kedua sistem memberikan pendekatan yang complementary. Content-based filtering unggul dalam coverage dan mengatasi cold start, sedangkan collaborative filtering memberikan rekomendasi berdasarkan preferensi komunitas. Implementasi hybrid system dapat menggabungkan kelebihan kedua pendekatan untuk hasil yang optimal.
+- Total Recommendations: 500
 
+  - Jumlah total rekomendasi yang dihasilkan selama evaluasi.
+
+### 2.  Evaluasi Collaborative Filtering
+- RMSE: 7.5269
+
+  - Root Mean Square Error (RMSE) digunakan untuk mengukur selisih antara rating sebenarnya dan prediksi sistem.
+
+  - RMSE 7.52 cukup tinggi, tapi hal ini bisa terjadi karena:
+
+    - Dataset memiliki rating dalam skala kecil tapi nilai prediksi dalam skala berbeda.
+
+    - Bisa juga karena rating aslinya sparse atau noise cukup besar.
+
+- Number of test ratings: 1268
+
+  - Jumlah pasangan user-anime yang digunakan untuk menguji model collaborative filtering.
+
+  - Angka ini menunjukkan ukuran data uji yang dipakai menghitung RMSE.
+
+ Kesimpulan Sementara
+- Content-based filtering: Stabil dan selalu berhasil merekomendasikan, tapi cakupannya terbatas.
+
+- Collaborative filtering: Lebih luas secara potensi rekomendasi, tapi prediksinya masih bisa ditingkatkan (RMSE tinggi).
+
+# 7. FINAL RECOMMENDATIONS DEMO
+#### Rekomendasi untuk Anime: 'Death Note'
+1.  Content-Based Filtering:
+
+Berikut 10 anime yang mirip dengan Death Note berdasarkan kesamaan genre dan tipe:
+
+- Mousou Dairinin – Drama psikologis penuh misteri dan supranatural (Rating: 7.74)
+
+- Death Note Rewrite – Versi alternatif dari Death Note dengan nuansa serupa (Rating: 7.84)
+
+- Higurashi no Naku Koro ni Kai – Thriller misteri dan supranatural (Rating: 8.41)
+
+- Mirai Nikki (TV) – Aksi dan psikologi yang tegang dengan tema kematian (Rating: 8.07)
+
+- Higurashi no Naku Koro ni Rei – Gabungan misteri dan humor gelap (Rating: 7.56)
+
+- Monster – Kisah kriminal psikologis intens (Rating: 8.72)
+
+- Higurashi no Naku Koro ni – Atmosfer horor dan penuh teka-teki (Rating: 8.17)
+
+- Mirai Nikki: Ura Mirai Nikki – Tambahan cerita untuk Mirai Nikki (Rating: 6.79)
+
+- Zankyou no Terror – Tema psikologis dan ketegangan (Rating: 8.26)
+
+- Shigofumi – Drama fantasi dengan sentuhan kematian dan emosional (Rating: 7.62)
+
+2. Collaborative Filtering:
+
+Rekomendasi berdasarkan kesamaan preferensi pengguna (user-based):
+
+Tonari no Kaibutsu-kun – Komedi romantis sekolah (Rating: 7.77)
+
+- Suzumiya Haruhi no Yuuutsu – Campuran misteri dan fiksi ilmiah sekolah (Rating: 8.06)
+
+- Claymore – Aksi fantasi gelap dengan unsur supranatural (Rating: 7.92)
+
+- Gintama – Komedi dan aksi parodi (Rating: 9.04)
+
+- Dragon Ball Z – Pertarungan epik penuh aksi klasik (Rating: 8.32)
+
+- Angel Beats! – Cerita sekolah penuh drama dan kehidupan setelah mati (Rating: 8.39)
+
+- Kuroko no Basket – Anime olahraga dengan elemen persaingan seru (Rating: 8.46)
+
+- Log Horizon – Dunia virtual dan petualangan fantasi (Rating: 8.14)
+
+- Bakemonogatari – Dialog cepat dan atmosfer supernatural (Rating: 8.39)
+
+- Code Geass R2 – Konflik politik dan kekuatan super (Rating: 8.98)
+
+✅ Kesimpulan Akhir Proyek
+Sistem rekomendasi anime berhasil dibangun dengan dua pendekatan utama:
+
+1. Content-Based Filtering
+Menggunakan informasi konten seperti genre dan tipe anime untuk menemukan kesamaan antar anime.
+
+2. Collaborative Filtering
+Mengandalkan perilaku rating pengguna (user-item matrix) untuk memprediksi preferensi berdasarkan pola rating.
+
+Keduanya saling melengkapi: content-based cocok untuk pengguna baru, sedangkan collaborative bekerja baik dengan data rating yang cukup.
