@@ -477,12 +477,12 @@ Sistem Collaborative Filtering dengan SVD berhasil memberikan rekomendasi anime 
 ### 1. Content-Based Filtering Evaluation
 
 #### Metrik Evaluasi
-- **Coverage:** 0.0573 (5.73%)
+- **Coverage:** 0.0673 (6.73%)
 - **Success Rate:** 1.0000 (100%)
 - **Total Recommendations:** 500
 
 #### Interpretasi Hasil
-- **Coverage 5.73%:** Sistem mampu memberikan rekomendasi untuk 5.73% dari total item dalam dataset
+- **Coverage 6.73%:** Sistem mampu memberikan rekomendasi untuk 6.73% dari total item dalam dataset
 - **Success Rate 100%:** Semua rekomendasi yang diberikan berhasil (tidak ada kegagalan sistem)
 - **Total 500 Recommendations:** Sistem berhasil menghasilkan 500 rekomendasi
 
@@ -511,7 +511,7 @@ Sistem Collaborative Filtering dengan SVD berhasil memberikan rekomendasi anime 
 - Tidak bergantung pada data user lain
 
 #### Kekurangan 
-❌ **Coverage Rendah (5.73%)**
+❌ **Coverage Rendah (6.73%)**
 - Hanya dapat merekomendasikan sebagian kecil dari total anime
 - Keterbatasan pada anime dengan informasi genre yang lengkap
 - Potensi cold start problem untuk anime baru tanpa metadata lengkap
