@@ -1,822 +1,636 @@
-#  Sistem Rekomendasi Anime - Reinhart Jens Robert
+# Laporan Proyek Machine Learning - Reinhart Jens Robert
+# Project Overview - Sistem Rekomendasi Musik Spotify
+Latar Belakang
+Industri musik digital telah mengalami pertumbuhan eksponensial dalam dekade terakhir. Platform streaming musik seperti Spotify, Apple Music, dan YouTube Music telah mengubah cara konsumen mengakses dan menemukan musik baru. Dengan jutaan lagu yang tersedia, pengguna sering mengalami kesulitan dalam menemukan musik yang sesuai dengan preferensi mereka - fenomena yang dikenal sebagai "information overload" atau kelebihan informasi.
+Sistem rekomendasi musik menjadi solusi krusial untuk mengatasi masalah ini. Menurut penelitian McKinsey & Company (2021), sistem rekomendasi yang efektif dapat meningkatkan engagement pengguna hingga 60% dan meningkatkan waktu mendengarkan musik hingga 40%. Spotify sendiri melaporkan bahwa 30% dari total streaming berasal dari musik yang direkomendasikan oleh algoritma mereka.
 
-## Project Overview
+Mengapa Proyek Ini Penting
 
-Dalam era digital saat ini, jumlah konten hiburan seperti anime terus meningkat pesat. Dengan ribuan judul anime yang tersedia, pengguna sering mengalami kesulitan dalam menemukan anime yang sesuai dengan preferensi mereka. Fenomena ini dikenal sebagai "information overload" dimana terlalu banyak pilihan justru membuat pengambilan keputusan menjadi sulit.
-Sistem rekomendasi telah menjadi solusi yang sangat efektif untuk mengatasi masalah ini. Platform seperti Netflix, Crunchyroll, dan MyAnimeList menggunakan sistem rekomendasi untuk membantu pengguna menemukan konten yang relevan dengan preferensi mereka. Hal ini tidak hanya meningkatkan kepuasan pengguna, tetapi juga meningkatkan engagement dan retention pada platform tersebut.
-royek ini penting untuk diselesaikan karena:
+1. Peningkatan User Experience: Membantu pengguna menemukan musik baru yang sesuai dengan selera mereka
+2. Retensi Pengguna: Sistem rekomendasi yang baik dapat meningkatkan loyalitas pengguna terhadap platform
+3. Monetisasi: Meningkatkan engagement dapat berdampak pada peningkatan revenue melalui subscription dan advertising
+4. Diversifikasi Musik: Membantu artis baru mendapatkan eksposur yang lebih luas
 
-1. Meningkatkan User Experience: Membantu pengguna menemukan anime yang sesuai dengan preferensi mereka dengan lebih efisien
-2. Mengatasi Information Overload: Mengurangi waktu yang dibutuhkan pengguna untuk mencari anime yang menarik
-3. Personalisasi: Memberikan rekomendasi yang dipersonalisasi berdasarkan karakteristik anime dan pola preferensi pengguna
-4. Business Value: Sistem rekomendasi yang baik dapat meningkatkan engagement dan monetisasi platform
+Referensi Penelitian
 
+- Schedl, M., Zamani, H., Chen, C. W., Deldjoo, Y., & Elahi, M. (2018). Current challenges and visions in music recommender systems research. International journal of multimedia information retrieval, 7(2), 95-116.
+- Spotify Technology S.A. (2021). Annual Report 2021. Retrieved from Spotify Investor Relations.
 
-## Business Understanding
-Berdasarkan analisis kebutuhan pengguna dan tantangan dalam industri anime streaming, masalah utama yang ingin diselesaikan adalah:
+# Business Understanding
+**Problem Statements**
 
-1. Kesulitan Discovery: Bagaimana cara membantu pengguna menemukan anime baru yang sesuai dengan preferensi mereka dari ribuan judul yang tersedia?
-2. Personalisasi Rekomendasi: Bagaimana cara memberikan rekomendasi yang dipersonalisasi berdasarkan karakteristik anime (genre, tipe, rating) dan pola preferensi pengguna?
-3. Cold Start Problem: Bagaimana cara memberikan rekomendasi yang relevan untuk pengguna baru yang belum memiliki riwayat rating atau preferensi?
+Berdasarkan analisis kebutuhan industri musik digital, terdapat beberapa permasalahan utama:
 
-**Goals:**
+1. Bagaimana cara membantu pengguna menemukan musik baru yang sesuai dengan preferensi mereka berdasarkan karakteristik audio musik?
+2. Bagaimana cara merekomendasikan musik berdasarkan pola perilaku dan preferensi pengguna lain yang memiliki selera musik serupa?
+3. Bagaimana cara mengoptimalkan sistem rekomendasi untuk meningkatkan akurasi dan relevansi rekomendasi musik?
+
+Goals
 Tujuan dari proyek ini adalah:
 
-1. Mengembangkan sistem rekomendasi hybrid yang dapat memberikan rekomendasi anime yang akurat dan relevan dengan menggabungkan pendekatan Content-Based Filtering dan Collaborative Filtering.
-2. Meningkatkan akurasi rekomendasi dengan memanfaatkan informasi konten anime (genre, tipe) dan pola rating pengguna untuk menghasilkan rekomendasi yang lebih personal dan relevan.
-3. Mengatasi keterbatasan masing-masing metode dengan memanfaatkan kelebihan dari kedua pendekatan untuk menciptakan sistem yang lebih robust dan komprehensif.
+1. Mengembangkan sistem rekomendasi musik berbasis Content-Based Filtering yang dapat merekomendasikan musik berdasarkan fitur audio (acousticness, danceability, energy, dll.)
+2. Mengembangkan sistem rekomendasi musik berbasis Collaborative Filtering yang dapat merekomendasikan musik berdasarkan pola preferensi pengguna
+3. Mengevaluasi dan membandingkan performa kedua pendekatan untuk memberikan rekomendasi yang optimal
+4. Menyediakan top-N recommendations yang dapat diimplementasikan dalam aplikasi musik streaming
 
-### Solution Approach
-Untuk mencapai goals yang telah ditetapkan, proyek ini akan mengimplementasikan dua pendekatan sistem rekomendasi:
+**Solution Approach**
 1. Content-Based Filtering
-Pendekatan ini merekomendasikan anime berdasarkan kesamaan karakteristik konten dengan anime yang disukai pengguna sebelumnya.
 
-Metode yang digunakan:
+Pendekatan: Menggunakan fitur audio musik untuk mencari kemiripan antar lagu
 
-- TF-IDF Vectorization: Untuk mengubah fitur kategoris (genre, tipe) menjadi representasi numerik
-- Cosine Similarity: Untuk mengukur kesamaan antar anime berdasarkan fitur konten
-
-Kelebihan:
-
-- Tidak memerlukan data dari pengguna lain
-- Dapat memberikan rekomendasi untuk anime baru (tidak ada cold start problem untuk item)
-- Rekomendasi dapat dijelaskan dengan jelas (explainable)
-
-Kekurangan:
-
-- Terbatas pada fitur yang tersedia dalam dataset
-- Cenderung memberikan rekomendasi yang similar (lack of diversity)
-- Tidak dapat menangkap preferensi pengguna yang kompleks
+- Fitur yang digunakan: acousticness, danceability, duration_ms, energy, instrumentalness, liveness, loudness, speechiness, tempo, valence
+- Algoritma: Cosine Similarity atau Euclidean Distance
+Keunggulan: Tidak memerlukan data user interaction, dapat merekomendasikan lagu baru
+- Implementasi: Normalisasi fitur → Perhitungan similarity matrix → Pemberian rekomendasi berdasarkan similarity score
 
 2. Collaborative Filtering
-Pendekatan ini merekomendasikan anime berdasarkan pola rating dan preferensi pengguna yang memiliki selera similar.
+Pendekatan: Menggunakan pola interaksi pengguna untuk menemukan pengguna dengan preferensi serupa
 
-Metode yang digunakan:
-
-- Matrix Factorization dengan SVD (Singular Value Decomposition): Untuk mereduksi dimensi dan mengekstrak faktor laten dari user-item matrix
-- Synthetic User Generation: Karena dataset tidak memiliki data user rating, akan dibuat synthetic users berdasarkan popularity dan rating anime
-
-Kelebihan:
-
-- Dapat menangkap preferensi kompleks dan pola tersembunyi
-- Tidak bergantung pada fitur konten
-- Dapat memberikan rekomendasi yang unexpected dan diverse
-
-Kekurangan:
-
-- Memerlukan data rating dari banyak pengguna
-- Cold start problem untuk pengguna dan item baru
-- Sulit untuk dijelaskan (black box)
-
-3. Hybrid Approach
-Menggabungkan kedua pendekatan di atas untuk memanfaatkan kelebihan masing-masing dan mengurangi kelemahan individual.
+- Metode: User-Based atau Item-Based Collaborative Filtering
+- Algoritma: Matrix Factorization (SVD) atau K-Nearest Neighbors
+- Keunggulan: Dapat menemukan pola preferensi yang kompleks, tidak bergantung pada fitur konten
+- Implementasi: Pembuatan user-item matrix → Aplikasi algoritma CF → Pemberian rekomendasi berdasarkan user similarity
 
 # Data Understanding
-## 1. DATA LOADING DAN EXPLORATORY DATA ANALYSIS
+# 1. DATA LOADING & EXPLORATION
 
-# Data Understanding - Dataset Anime
+###  **Gambaran Umum Dataset**
+Link akses dataset : https://www.kaggle.com/datasets/zaheenhamidani/ultimate-spotify-tracks-db
 
-## Informasi Umum Dataset
-Dataset ini terdiri dari **12.294 baris** dan **7 kolom**, yang merepresentasikan informasi mendetail tentang berbagai judul anime. Setiap baris dalam dataset merepresentasikan satu judul anime dengan berbagai atribut karakteristiknya.
+Dataset yang digunakan terdiri dari **22.145 baris** dan **18 kolom**, yang masing-masing mewakili lagu-lagu beserta atribut musikal dan metadata terkait.
 
-**Sumber Dataset:** [Anime Recommendations Database - Kaggle](https://www.kaggle.com/datasets/CooperUnion/anime-recommendations-database)
+**Kolom-kolom penting dalam dataset antara lain:**
 
-## Deskripsi Fitur Dataset
+* `genre`: Genre musik dari lagu.
+* `artist_name`: Nama artis yang membawakan lagu.
+* `track_name`: Judul lagu.
+* `track_id`: ID unik dari lagu.
+* `popularity`: Popularitas lagu (skala 0–100).
+* Beragam fitur audio seperti: `acousticness`, `danceability`, `energy`, `instrumentalness`, `liveness`, `loudness`, `speechiness`, `tempo`, `valence`, dll.
 
-### 1. anime_id
-- **Tipe Data:** Integer (int64)
-- **Deskripsi:** Identifikasi unik untuk setiap anime dalam database. Setiap anime memiliki ID yang berbeda sebagai primary key.
-- **Range Nilai:** 1 - 34.527
-- **Missing Values:** 0 (tidak ada nilai kosong)
+### 2. **Tipe Data dan Informasi Dasar**
 
-### 2. name
-- **Tipe Data:** Object (string)
-- **Deskripsi:** Nama atau judul resmi dari anime. Mencakup judul dalam bahasa Jepang yang telah diromanisasi atau judul dalam bahasa Inggris.
-- **Contoh:** "Kimi no Na wa.", "Fullmetal Alchemist: Brotherhood", "Steins;Gate"
-- **Missing Values:** 0 (tidak ada nilai kosong)
+Hasil analisis struktur dataset (`df.info()`) menunjukkan bahwa mayoritas kolom bertipe numerik (`float64` dan `int64`), sedangkan beberapa kolom seperti `genre`, `artist_name`, `track_name`, dan `track_id` bertipe `object` (string).
 
-### 3. genre
-- **Tipe Data:** Object (string)
-- **Deskripsi:** Genre atau kategori anime yang dipisahkan dengan koma. Satu anime dapat memiliki beberapa genre sekaligus.
-- **Contoh:** "Action, Adventure, Drama, Fantasy, Magic", "Drama, Romance, School, Supernatural"
-- **Missing Values:** 62 (0,50% dari total data)
+### 3. **Missing Values**
 
-### 4. type
-- **Tipe Data:** Object (string)
-- **Deskripsi:** Format atau tipe media anime diproduksi dan ditayangkan.
-- **Kategori Utama:** TV, Movie, OVA (Original Video Animation), ONA (Original Net Animation), Special, Music
-- **Missing Values:** 25 (0,20% dari total data)
+Ditemukan adanya **1 nilai kosong (missing value)** di sebagian besar kolom numerik (seperti `duration_ms`, `energy`, dll), total **17 kolom yang masing-masing kekurangan 1 data**. Jumlah yang sangat kecil ini (1 dari 22.145) tidak berdampak signifikan, dan bisa ditangani dengan:
 
-### 5. episodes
-- **Tipe Data:** Object (string)
-- **Deskripsi:** Jumlah episode dalam satu seri anime. Meskipun bertipe object, umumnya berisi angka yang menunjukkan total episode.
-- **Catatan:** Beberapa nilai mungkin berupa "Unknown" untuk anime yang jumlah episodenya tidak diketahui
-- **Missing Values:** 0 (tidak ada nilai kosong)
+* Menghapus 1 baris tersebut, atau
+* Mengisi dengan median atau nilai rata-rata kolom terkait.
 
-### 6. rating
-- **Tipe Data:** Float (float64)
-- **Deskripsi:** Rating atau skor rata-rata yang diberikan oleh pengguna untuk anime tersebut dalam skala 1-10.
-- **Range Nilai:** 1,67 - 10,00
-- **Rata-rata:** 6,47
-- **Missing Values:** 230 (1,87% dari total data)
+### 4. **Statistik Deskriptif (Numerik)**
 
-### 7. members
-- **Tipe Data:** Integer (int64)
-- **Deskripsi:** Jumlah pengguna yang telah menambahkan anime tersebut ke daftar mereka di platform (kemungkinan MyAnimeList).
-- **Range Nilai:** 5 - 1.013.917
-- **Median:** 1.550
-- **Missing Values:** 0 (tidak ada nilai kosong)
+Berikut beberapa insight dari statistik dasar:
 
-## Statistik Deskriptif
+#### a. **Popularitas**
 
-### Distribusi Rating
-- **Mean:** 6,47 (rating rata-rata cukup baik)
-- **Median:** 6,57 (distribusi cenderung normal)
-- **Minimum:** 1,67 (rating terendah)
-- **Maximum:** 10,00 (rating sempurna)
-- **Standard Deviation:** 1,03 (variasi rating tidak terlalu tinggi)
+* Rata-rata: 50.18
+* Maksimum: 100
+* Minimum: 0
+  → Skor popularitas tersebar luas, dengan sebagian besar lagu berada di rentang skor menengah (sekitar 50-an).
 
-### Distribusi Members (Popularitas)
-- **Mean:** 18.071 anggota
-- **Median:** 1.550 anggota (menunjukkan distribusi yang sangat skewed)
-- **Minimum:** 5 anggota
-- **Maximum:** 1.013.917 anggota
-- **Standard Deviation:** 54.821 (variasi sangat tinggi)
+#### b. **Acousticness**
 
-## Kualitas Data
+* Rata-rata: 0.195
+* Mayoritas lagu memiliki nilai rendah, artinya tidak terlalu akustik.
 
-### Missing Values
-Dataset memiliki kualitas yang cukup baik dengan persentase missing values yang rendah:
-- **genre:** 62 nilai kosong (0,50%)
-- **type:** 25 nilai kosong (0,20%)
-- **rating:** 230 nilai kosong (1,87%)
-- **Kolom lainnya:** tidak ada missing values
+#### c. **Danceability**
 
-### Duplikasi
-Tidak ditemukan data duplikat dalam dataset (0 duplikat), menunjukkan konsistensi data yang baik.
+* Rata-rata: 0.586
+* Mayoritas lagu tergolong cukup "dansa-able", mendekati nilai 0.6.
 
-## Insight Awal
+#### d. **Energy**
 
-1. **Kualitas Data Tinggi:** Dengan hanya ~2% missing values total, dataset ini memiliki kelengkapan yang baik untuk analisis.
+* Rata-rata: 0.680
+* Lagu cenderung memiliki energi tinggi secara umum.
 
-2. **Distribusi Rating Normal:** Rata-rata rating 6,47 menunjukkan sebagian besar anime memiliki kualitas yang cukup baik menurut pengguna.
+#### e. **Instrumentalness**
 
-3. **Popularitas Beragam:** Distribusi members yang sangat skewed (median 1.550 vs mean 18.071) menunjukkan ada segelintir anime yang sangat populer dan banyak anime yang kurang dikenal.
+* Median sangat mendekati 0
+  → Mayoritas lagu memiliki vokal (bukan lagu instrumental).
 
-4. **Genre Beragam:** Sistem multi-genre memungkinkan analisis yang lebih mendalam tentang preferensi pengguna.
+#### f. **Valence**
 
-5. **Format Media Lengkap:** Dengan berbagai tipe (TV, Movie, OVA, dll.), dataset ini representatif untuk seluruh ekosistem anime.
-## Penjelasan visualisasi 
-1. Distribusi Rating Anime
-Mayoritas anime memiliki rating antara 6 dan 7, membentuk distribusi normal.
+* Rata-rata: 0.493
+  → Keseimbangan antara lagu bernuansa positif (ceria) dan negatif (melankolis).
 
-2. Distribusi Tipe Anime
-Tipe anime paling banyak adalah TV (30.9%), disusul OVA (27%) dan Movie (19.1%).
+#### g. **Tempo**
 
-3. Top 10 Genre Terpopuler
-Genre paling populer adalah Comedy, diikuti Action dan Adventure.
+* Rata-rata: 121.6 BPM (beats per minute)
+  → Cocok dengan tempo lagu pop atau rock pada umumnya.
 
-4. Distribusi Jumlah Episode (≤50)
-Kebanyakan anime memiliki jumlah episode sedikit, terutama di bawah 10 episode.
+#### h. **Loudness**
 
-5. Rating vs Jumlah Members
-Terdapat kecenderungan bahwa anime dengan lebih banyak anggota cenderung memiliki rating yang lebih tinggi.
-6. Top 10 Anime Rating Tertinggi
-Anime dengan rating tertinggi adalah Gintama, Steins;Gate, dan Yakusoku: Africa Mizu to Midori.
+* Rata-rata: sekitar -6.7 dB, menunjukkan bahwa lagu sudah dalam bentuk *mastered audio* (umumnya keras dan siap publikasi).
 
-7. Korelasi Antar Variabel Numerik
-Terdapat korelasi sedang antara rating dan jumlah members (0.39), sedangkan korelasi dengan jumlah episode sangat lemah.
+Terima kasih! Berikut saya lanjutkan penjelasan statistik deskriptifnya **mulai dari fitur `tempo` hingga `valence`**, termasuk penutup bagian ini agar lengkap dan rapi:
+
+---
+
+#### **i. Tempo**
+
+* **Rata-rata (mean)**: 121.64 BPM
+* **Minimum**: 32.24 BPM
+* **Maksimum**: 218.08 BPM
+* **Kuartil**:
+
+  * Q1 (25%): 99.10 BPM
+  * Q2 (Median): 120.03 BPM
+  * Q3 (75%): 140.01 BPM
+
+👉 **Interpretasi**: Tempo berkisar dari sangat lambat hingga sangat cepat. Nilai median yang mendekati 120 BPM menunjukkan sebagian besar lagu memiliki tempo sedang hingga cepat, yang umum pada genre pop, rock, dan EDM.
+
+---
+
+#### **j. Valence**
+
+* **Rata-rata (mean)**: 0.493
+* **Minimum**: 0.0
+* **Maksimum**: 0.986
+* **Kuartil**:
+
+  * Q1: 0.319
+  * Q2 (Median): 0.483
+  * Q3: 0.666
+
+👉 **Interpretasi**: `Valence` mencerminkan seberapa positif atau ceria suatu lagu. Rata-rata mendekati 0.5 menandakan dataset ini cukup seimbang antara lagu-lagu bernuansa ceria (valence tinggi) dan melankolis/gelap (valence rendah). Ini penting dalam sistem rekomendasi jika ingin menyesuaikan suasana hati pengguna.
+
+---
+
+### **6. Kesimpulan Akhir Data Understanding**
+
+* Dataset bersih dan hampir tidak memiliki missing value signifikan (hanya 1 baris).
+* Nilai-nilai fitur audio (seperti energy, valence, danceability) memiliki variasi yang baik — penting untuk sistem rekomendasi berbasis konten.
+* Dataset mencakup genre, artis, dan popularitas, memungkinkan analisis lintas dimensi untuk berbagai pendekatan filtering.
+* Statistik menunjukkan bahwa sebagian besar lagu cocok untuk gaya pop modern: tempo sedang, danceable, bertenaga, dan tidak terlalu akustik atau instrumental.
+* Secara umum, dataset ini **siap digunakan untuk modeling**, baik content-based maupun collaborative filtering.
+
+
+# 2. EXPLORATORY DATA ANALYSIS
+## 📊 **Analisis Visualisasi Data Musik**
+
+### 1. **Distribusi Genre Teratas**
+
+* **Dance** dan **Alternative** adalah dua genre paling dominan, masing-masing memiliki lebih dari 8.000 track.
+* Di posisi ketiga adalah **Country** dengan sekitar 4.000 track.
+* Genre lainnya seperti **Movie**, **R\&B**, dan **A Capella** memiliki jumlah track yang jauh lebih sedikit.
+
+👉 **Interpretasi**: Data didominasi oleh lagu Dance dan Alternative, yang menunjukkan bahwa hasil analisis dan rekomendasi bisa lebih berat ke genre-genre tersebut jika tidak diseimbangkan.
+
+---
+
+### 2. **Distribusi Popularitas**
+
+* Sebagian besar lagu memiliki skor popularitas di rentang **40 hingga 60**, membentuk kurva yang hampir normal.
+* Sangat sedikit lagu dengan popularitas sangat rendah (di bawah 10) atau sangat tinggi (mendekati 100).
+
+👉 **Interpretasi**: Dataset memiliki distribusi popularitas yang cukup seimbang dengan puncak pada skor sekitar 50, artinya mayoritas lagu tergolong "moderat" dari segi popularitas.
+
+---
+
+### 3. **Matriks Korelasi Fitur Audio**
+
+Beberapa poin penting dari matriks korelasi:
+
+* 🔷 **Acousticness vs Energy**: Korelasi negatif kuat (**-0.66**), menunjukkan bahwa lagu yang akustik cenderung tidak energik.
+* 🔶 **Energy vs Loudness**: Korelasi positif kuat (**0.74**), konsisten karena lagu yang lebih energik umumnya lebih keras.
+* 🔶 **Danceability vs Valence**: Korelasi sedang (**0.40**), menunjukkan bahwa lagu yang mudah untuk menari cenderung lebih ceria.
+* 🔷 **Danceability vs Tempo**: Korelasi negatif ringan (**-0.21**), sedikit berlawanan dengan asumsi bahwa lagu cepat selalu lebih danceable.
+* Sebagian besar fitur lainnya tidak memiliki korelasi kuat satu sama lain, menandakan fitur-fitur ini memberikan informasi yang unik.
+
+---
+
+### 4. **Rata-Rata Audio Features per Genre**
+
+#### a. **A Capella**
+
+* Sangat akustik (**acousticness: 0.83**) dan sangat pelan (**loudness: -13.66**).
+* Rendah energi, danceability, dan instrumentalness — sesuai dengan karakteristik vokal murni.
+
+#### b. **Alternative**
+
+* Seimbang antara danceable dan energik, dengan valence yang sedang.
+* Loudness tinggi dan sedikit instrumental — cocok untuk genre band/rock alternatif.
+
+#### c. **Country**
+
+* Moderat di semua fitur, dengan **valence tertinggi kedua (0.53)**, artinya banyak lagu country bernada positif.
+
+#### d. **Dance**
+
+* Tinggi dalam **danceability (0.64)** dan **energy (0.70)**.
+* Rendah dalam acousticness dan loudness yang tinggi — sangat cocok untuk lantai dansa.
+
+#### e. **Movie**
+
+* **Acousticness tinggi (0.64)** dan **instrumentalness tertinggi (0.088)**, sesuai ekspektasi karena banyak lagu film adalah instrumental.
+* Energy rendah dan loudness rendah juga mendukung genre sinematik dan orkestral.
+
+👉 **Kesimpulan**: Setiap genre memiliki "jejak audio" unik, dan ini sangat penting dalam sistem rekomendasi berbasis konten.
+
+---
+
+## ✅ **Rangkuman**
+
+* Genre dominan: Dance & Alternative.
+* Popularitas terdistribusi normal di tengah (moderat).
+* Korelasi audio menunjukkan hubungan kuat antara energy-loudness dan energy-acousticness.
+* Analisis rata-rata fitur per genre membantu dalam memahami karakteristik unik tiap genre, dan **sangat berguna dalam membangun sistem rekomendasi berbasis konten.**
 
 # 3. DATA PREPARATION
-### 3.1 Data Cleaning
-Membersihkan data dan menangani missing values untuk persiapan modeling.
 
-1. Handle Missing Values (Menangani Data Kosong)
-- Awalnya terdapat 317 data kosong di seluruh kolom.
-
-- Baris dengan nilai rating kosong dihapus karena rating penting untuk sistem rekomendasi (misalnya collaborative filtering).
-
-- Nilai kosong pada kolom genre diisi dengan string "Unknown".
-
-- Kolom episodes yang berisi teks seperti "Unknown" dikonversi ke numerik (episodes_numeric), lalu nilai yang tidak bisa dikonversi (NaN) diganti dengan median dari kolom tersebut.
-
-- Setelah ini, tidak ada lagi missing values.
-
-2. Remove Duplicates (Menghapus Duplikasi)
-- Dilakukan penghapusan baris duplikat agar tidak mengganggu proses analisis.
-
-- Setelah proses ini, jumlah data menjadi 12.064 baris dan 8 kolom.
-
-3. Filter Berdasarkan Jumlah Members
-- Data difilter agar hanya menyertakan anime yang memiliki minimal 1000 members, untuk menghindari data yang terlalu jarang dinilai.
-
-- Setelah filter ini, jumlah data berkurang menjadi 6.791 baris.
-
-4. Normalisasi Rating
-- Kolom rating dinormalisasi ke skala 0–1, yang berguna untuk algoritma yang sensitif terhadap skala (seperti KNN atau cosine similarity).
-
-- Hasilnya disimpan di kolom baru: rating_normalized.
-
-5. Membuat Fitur Konten (Content Features)
-- Untuk keperluan content-based filtering, dibuat fitur content_features dengan menggabungkan isi kolom genre dan type menjadi satu string teks.
-
-- Ini mempermudah transformasi teks ke vektor fitur seperti TF-IDF.
-
-Output Akhir
-- Setelah semua proses, dataset akhir memiliki bentuk (shape): 6.791 baris dan 10 kolom.
-
-- Artinya, data kini bersih, terfilter, dan siap dipakai untuk model rekomendasi baik berbasis konten maupun kolaboratif.
+Hasil: Tidak ada baris duplikat yang ditemukan (Removed 0 duplicate rows), berarti semua entri unik.
 
 # Modeling
-# Sistem Rekomendasi Anime - Content-Based Filtering
-Content-Based Filtering merekomendasikan item berdasarkan kesamaan karakteristik/fitur dari item tersebut.
-Dalam kasus ini, kita akan menggunakan genre sebagai fitur utama untuk menghitung kesamaan antar anime.
 
-## Penjelasan Sistem Rekomendasi
+# 4. CONTENT-BASED FILTERING
+Sistem rekomendasi ini menggunakan pendekatan Content-Based Filtering, yaitu merekomendasikan lagu berdasarkan kemiripan fitur audio antar lagu.
 
-### 1. Jenis Sistem Rekomendasi: Content-Based Filtering
+🔧 Teknik yang Digunakan:
+Fitur yang digunakan: acousticness, danceability, energy, instrumentalness, liveness, loudness, speechiness, tempo, valence, popularity.
 
-**Content-Based Filtering** adalah teknik sistem rekomendasi yang merekomendasikan item berdasarkan kesamaan karakteristik atau fitur konten dari item tersebut. Dalam konteks dataset anime ini, sistem membandingkan fitur-fitur seperti genre, tipe, dan karakteristik lainnya untuk menemukan anime yang serupa.
+Normalisasi: Menggunakan StandardScaler agar semua fitur berada pada skala yang sama.
 
-### 2. Cara Kerja Sistem
+Perhitungan kemiripan: Menggunakan cosine similarity untuk mengukur seberapa mirip dua lagu berdasarkan vektor fitur mereka.
 
-#### Input
-- **Query Anime:** "Kimi no Na wa." (anime yang dijadikan referensi)
-- **Dataset:** 6.791 anime yang digunakan untuk training model
+🧪 Hasil Uji:
+Contoh lagu: "C'est beau de faire un Show"
+Sistem menghasilkan 10 rekomendasi lagu paling mirip, seperti:
 
-#### Proses
-1. **Feature Extraction:** Sistem mengekstrak fitur-fitur dari anime target (Kimi no Na wa.)
-2. **Similarity Calculation:** Menghitung similarity score antara anime target dengan seluruh anime dalam database
-3. **Ranking:** Mengurutkan anime berdasarkan similarity score tertinggi
-4. **Filtering:** Mengambil top 10 rekomendasi
+| No | Judul Lagu                                   | Artis           | Genre     | Popularitas | Skor Kemiripan |
+| -- | -------------------------------------------- | --------------- | --------- | ----------- | -------------- |
+| 1  | Twist De L'enrhumé - Remastered              | Henri Salvador  | Movie     | 7           | 0.9442         |
+| 2  | Counterfeit                                  | Smithfield      | Country   | 19          | 0.9148         |
+| 3  | Sharivan                                     | Bernard Minet   | Movie     | 3           | 0.9048         |
+| 4  | Yeah Yeah Yeah                               | Dustin Lynch    | Country   | 34          | 0.9015         |
+| 5  | Sounds So Good                               | Ashton Shepherd | Country   | 35          | 0.8984         |
+| 6  | Part Time Lover                              | Hyannis Sound   | A Capella | 5           | 0.8893         |
+| 7  | Family Feud                                  | Pistol Annies   | Country   | 35          | 0.8891         |
+| 8  | La vérité si je mange (de la bouffe en gros) | Les Hérissons   | Movie     | 0           | 0.8849         |
+| 9  | Aarti Kunj Bihari Ki                         | Chorus          | Movie     | 0           | 0.8812         |
+| 10 | Jaspion                                      | Bernard Minet   | Movie     | 3           | 0.8777         |
 
-#### Output
-- **Top 10 Recommendations:** Daftar anime yang paling mirip dengan "Kimi no Na wa."
-- **Similarity Score:** Nilai kesamaan untuk setiap rekomendasi
 
-## Analisis Top-N Recommendation
+✅ Kesimpulan:
+Dengan teknik ini, sistem mampu memberikan rekomendasi lagu yang relevan secara musikal, tanpa membutuhkan data pengguna.
 
-### Top 10 Rekomendasi untuk "Kimi no Na wa."
+# 5. COLLABORATIVE FILTERING
 
-| Rank | Anime ID | Nama Anime | Genre | Type | Rating | Members | Similarity Score |
-|------|----------|------------|-------|------|--------|---------|------------------|
-| 1 | 1110 | Aura: Maryuuin Kouga Saigo no Tatakai | Comedy, Drama, Romance, School, Supernatural | Movie | 7.67 | 22599 | 0.960434 |
-| 2 | 1491 | Harmonie | Drama, School, Supernatural | Movie | 7.52 | 29029 | 0.907782 |
-| 3 | 1942 | Air Movie | Drama, Romance, Supernatural | Movie | 7.39 | 44179 | 0.889683 |
-| 4 | 208 | Kokoro ga Sakebitagatterunda | Drama, Romance, School | Movie | 8.32 | 59652 | 0.876845 |
-| 5 | 5301 | Mind: A Breath of Heart (TV) | Drama, Romance, School, Supernatural | TV | 6.14 | 7778 | 0.833334 |
-| 6 | 4973 | Wind: A Breath of Heart OVA | Drama, Romance, School, Supernatural | OVA | 6.35 | 2043 | 0.823586 |
-| 7 | 2082 | Clannad Movie | Drama, Fantasy, Romance, School | Movie | 7.35 | 99506 | 0.796194 |
-| 8 | 894 | Momo e no Tegami | Drama, Supernatural | Movie | 7.78 | 30519 | 0.784604 |
-| 9 | 1689 | Zutto Mae kara Suki deshita.: Kokuhaku Jikkou... | Romance, School | Movie | 7.47 | 35058 | 0.776874 |
-| 10 | 4971 | Taifuu no Noruda | Drama, School, Sci-Fi, Supernatural | Movie | 6.35 | 14281 | 0.771587 |
+## Hasil Collaborative Filtering Recommender System
 
-## Analisis Hasil Rekomendasi
+### 1. **Inisialisasi Sistem Rekomendasi**
 
-### 1. Kesamaan Genre
-**Kimi no Na wa.** memiliki genre: *Drama, Romance, School, Supernatural*
+Sistem collaborative filtering berhasil diinisialisasi dengan data sintetis yang terdiri dari 4.996 interaksi pengguna dan item (track). Dataset ini berisi:
 
-Analisis kesamaan genre dengan rekomendasi:
-- **100% Match:** Hampir semua rekomendasi memiliki genre Drama dan Romance
-- **School Theme:** 7 dari 10 rekomendasi memiliki tema sekolah
-- **Supernatural Element:** 8 dari 10 rekomendasi memiliki elemen supernatural
-- **Movie Format:** 8 dari 10 rekomendasi berbentuk movie (sama dengan Kimi no Na wa.)
+* **Jumlah pengguna unik:** 100
+* **Jumlah track unik:** 4.394
+* **Distribusi rating:** Rata-rata rating adalah sekitar 2.78 dengan rentang antara 1.0 hingga 4.9. Hal ini menunjukkan adanya variasi preferensi pengguna terhadap musik.
+* **Matriks user-item:** Bentuk matriks adalah (100, 4394) yang berarti terdapat 100 pengguna dan 4.394 track yang bisa dirating.
+* **Sparsity matriks:** 98.86%, yang menunjukkan bahwa mayoritas kombinasi user-track belum memiliki rating (matriks sangat jarang). Ini umum terjadi pada data rekomendasi musik karena pengguna biasanya hanya memberi rating sebagian kecil lagu.
 
-### 2. Kualitas Rekomendasi
+### 2. **Karakteristik Data**
 
-#### Similarity Score Analysis
-- **Highest Similarity:** 0.960434 (Aura: Maryuuin Kouga Saigo no Tatakai)
-- **Average Similarity:** 0.844 (similarity tinggi menunjukkan kualitas rekomendasi yang baik)
-- **Lowest Similarity:** 0.771587 (masih dalam kategori tinggi)
+* Ada 554 track yang memiliki minimal 2 rating, artinya hanya sebagian kecil track yang punya cukup data untuk mendukung rekomendasi berbasis collaborative filtering.
+* Rata-rata rating per user sekitar 50, yang berarti pengguna rata-rata sudah memberi rating pada 50 lagu.
 
-#### Rating Quality
-- **Rating Range:** 6.14 - 8.32
-- **Average Rating:** 7.28 (kualitas anime yang direkomendasikan cukup baik)
-- **Best Rated:** Kokoro ga Sakebitagatterunda (8.32)
+### 3. **Rekomendasi untuk User 1**
 
-### 3. Popularitas (Members)
-- **Range:** 2.043 - 99.506 members
-- **Mix Popular & Niche:** Kombinasi anime populer dan kurang dikenal
-- **Most Popular:** Clannad Movie (99.506 members)
+Sistem menampilkan profil User 1 berdasarkan rating tertinggi yang diberikan pada 5 lagu:
 
-## Kelebihan Sistem Rekomendasi
+* Genre favorit User 1 tampaknya cenderung pada genre Alternative dan Dance, dengan rating beragam antara 1.7 hingga 3.5.
+* User 1 telah memberi rating pada 53 lagu, dan sistem menemukan 542 lagu yang belum pernah dirating oleh user ini.
+* Dari 542 lagu yang belum dirating, sistem menghasilkan prediksi rating untuk 61 lagu, dan memberikan rekomendasi 10 lagu teratas dengan prediksi rating antara 3.0 sampai 3.5.
+* Contoh lagu rekomendasi teratas: *Take It Off* oleh Kesha dengan prediksi rating 3.5, yang berada di genre Dance dengan popularitas sedang.
 
-### 1. Precision Tinggi
-- Similarity score tinggi (rata-rata 0.844) menunjukkan rekomendasi yang sangat relevan
-- Genre matching yang konsisten dengan preferensi pengguna
+### 4. **Pengujian pada Beberapa User**
 
-### 2. Diversitas Konten
-- Mencakup berbagai tahun rilis dan tingkat popularitas
-- Memberikan mix antara anime populer dan hidden gems
+* Pengujian dilakukan pada beberapa user (1, 2, dan 3), dengan hasil:
 
-### 3. Konsistensi Tema
-- Semua rekomendasi memiliki elemen drama dan romance
-- Tema supernatural dan sekolah yang konsisten
+  * Semua user memiliki jumlah rating sekitar 50.
+  * Sistem dapat memberikan setidaknya 5 rekomendasi yang relevan untuk masing-masing user.
+  * Lagu rekomendasi paling top berbeda-beda, misalnya User 2 direkomendasikan lagu *This Is Halloween* oleh Marilyn Manson, yang menunjukkan personalisasi rekomendasi sesuai preferensi masing-masing user.
 
-## Potensi Perbaikan
+### 5. **Statistik Sistem**
 
-### 1. Cold Start Problem
-- Sistem membutuhkan informasi konten yang lengkap
-- Sulit merekomendasikan anime baru tanpa data genre
+* Total pengguna yang tersedia dalam sistem adalah 100.
+* Total track di sistem 4.394.
+* Total interaksi adalah 4.996.
+* Rata-rata rating per user adalah 50.
+* Rata-rata rating per track sangat kecil, hanya sekitar 1.1, yang menegaskan sparsity data cukup tinggi.
 
-### 2. Over-specialization
-- Cenderung merekomendasikan anime yang sangat mirip
-- Kurang eksplorasi ke genre yang berbeda
+### 6. **Penambahan User Uji (Test User)**
 
-### 3. Tidak Mempertimbangkan Preferensi Dinamis
-- Tidak mempelajari perubahan selera pengguna dari waktu ke waktu
+* Ditambahkan test user baru dengan ID 9999 yang memberikan rating pada 5 lagu.
+* Setelah menambahkan user tersebut, matriks menjadi (101, 4398) dengan sparsity 98.87%.
+* Sistem berhasil menghasilkan 5 rekomendasi lagu dengan rating prediksi tinggi (sekitar 4.8).
+* Rekomendasi untuk user 9999 terdiri dari lagu-lagu dengan genre Country, Alternative, dan Dance, menyesuaikan preferensi dari rating yang diberikan user tersebut.
+
+---
 
 ## Kesimpulan
 
-Sistem rekomendasi Content-Based Filtering berhasil memberikan rekomendasi yang sangat relevan untuk "Kimi no Na wa." dengan similarity score tinggi dan kesamaan genre yang konsisten. Hasil top-10 recommendation menunjukkan anime dengan tema serupa (drama romantis dengan elemen supernatural dan latar sekolah) yang berkualitas baik berdasarkan rating pengguna.
+* Sistem collaborative filtering yang dikembangkan mampu memberikan rekomendasi musik yang relevan berdasarkan riwayat rating pengguna.
+* Meskipun data sangat sparse (hanya sebagian kecil interaksi yang tercatat), sistem masih dapat memprediksi rating dan menghasilkan rekomendasi yang personalized.
+* Hasil uji coba pada beberapa pengguna menunjukkan bahwa rekomendasi dapat berbeda sesuai dengan profil rating pengguna, yang menandakan sistem mampu menangkap preferensi individual.
+* Penambahan user baru juga langsung dapat dimasukkan ke sistem dan menghasilkan rekomendasi dengan kualitas yang baik.
 
-# Sistem Rekomendasi Anime - Collaborative Filtering
-## Penjelasan Sistem Rekomendasi
-
-### 1. Jenis Sistem Rekomendasi: Collaborative Filtering
-
-**Collaborative Filtering** adalah teknik sistem rekomendasi yang memberikan rekomendasi berdasarkan pola perilaku dan preferensi pengguna lain yang memiliki kesamaan. Sistem ini menggunakan **Matrix Factorization** dengan teknik **Singular Value Decomposition (SVD)** untuk memprediksi rating yang akan diberikan user terhadap anime yang belum pernah mereka tonton.
-
-### 2. Teknik yang Digunakan: SVD (Singular Value Decomposition)
-
-#### Konsep SVD
-- **Matrix Factorization:** Memecah user-item rating matrix menjadi komponen yang lebih sederhana
-- **Dimensionality Reduction:** Mengurangi dimensi data sambil mempertahankan informasi penting
-- **Latent Factors:** Menemukan faktor tersembunyi yang menjelaskan preferensi user dan karakteristik anime
-
-#### Proses Training
-- **Dataset:** 1000 users dan 6791 anime
-- **Synthetic User-Item Matrix:** Membuat matriks interaksi user-anime
-- **SVD Decomposition:** Memfaktorisasi matriks untuk pembelajaran pola
-
-## Analisis Top-N Recommendation untuk User ID 0
-
-### Top 10 Rekomendasi Collaborative Filtering
-
-| Rank | Anime ID | Nama Anime | Genre | Type | Rating | Members | Predicted Rating |
-|------|----------|------------|-------|------|--------|---------|------------------|
-| 1 | 922 | Tonari no Kaibutsu-kun | Comedy, Romance, School, Shoujo, Slice of Life | TV | 7.77 | 349536 | 3.712472 |
-| 2 | 466 | Suzumiya Haruhi no Yuuutsu | Comedy, Mystery, Parody, School, Sci-Fi, Slice... | TV | 8.66 | 429509 | 2.893617 |
-| 3 | 644 | Claymore | Action, Adventure, Demons, Fantasy, Shounen, S... | TV | 7.92 | 316853 | 2.711375 |
-| 4 | 12 | Gintama | Action, Comedy, Historical, Parody, Samurai | TV | 9.04 | 336376 | 2.464653 |
-| 5 | 206 | Dragon Ball Z | Action, Adventure, Comedy, Fantasy, Martial Ar... | TV | 8.32 | 375662 | 2.385217 |
-| 6 | 159 | Angel Beats! | Action, Comedy, Drama, School, Supernatural | TV | 8.39 | 717796 | 2.285199 |
-| 7 | 122 | Kuroko no Basket | Comedy, School, Shounen, Sports | TV | 8.46 | 338315 | 2.166660 |
-| 8 | 374 | Log Horizon | Action, Adventure, Fantasy, Game, Magic, Shounen | TV | 8.14 | 387100 | 2.029245 |
-| 9 | 160 | Bakemonogatari | Mystery, Romance, Supernatural, Vampire | TV | 8.39 | 482268 | 1.960845 |
-| 10 | 13 | Code Geass: Hangyaku no Lelouch R2 | Action, Drama, Mecha, Military, Sci-Fi, Super... | TV | 8.98 | 572888 | 1.947042 |
-
-## Analisis Hasil Rekomendasi
-
-### 1. Karakteristik Predicted Rating
-
-#### Range Prediksi
-- **Highest Prediction:** 3.712472 (Tonari no Kaibutsu-kun)
-- **Lowest Prediction:** 1.947042 (Code Geass R2)
-- **Average Prediction:** 2.426 (skala prediksi relatif rendah)
-
-#### Interpretasi Rating Prediksi
-- Rating prediksi bukan skala absolut 1-10
-- Nilai relatif untuk ranking rekomendasi
-- Semakin tinggi nilai, semakin cocok untuk user tersebut
-
-### 2. Diversitas Genre Rekomendasi
-
-#### Genre Distribution
-- **Action:** 6/10 anime (60%)
-- **Comedy:** 7/10 anime (70%)
-- **School:** 5/10 anime (50%)
-- **Fantasy:** 4/10 anime (40%)
-- **Supernatural:** 3/10 anime (30%)
-
-#### Diversitas yang Baik
-- **Mix Genre:** Kombinasi action, comedy, romance, supernatural
-- **Various Themes:** Sekolah, fantasi, mecha, olahraga, slice of life
-- **Balanced Content:** Tidak terfokus pada satu genre saja
-
-### 3. Kualitas Anime yang Direkomendasikan
-
-#### Rating Analysis
-- **Range Rating:** 7.77 - 9.04 (semua anime berkualitas tinggi)
-- **Average Rating:** 8.41 (sangat baik)
-- **Best Rated:** Gintama (9.04), Code Geass R2 (8.98)
-
-#### Popularitas Analysis
-- **Range Members:** 316.853 - 717.796
-- **Average Members:** 446.530 (anime populer)
-- **Most Popular:** Angel Beats! (717.796 members)
-
-### 4. Perbandingan dengan Content-Based
-
-#### Kelebihan Collaborative Filtering
-1. **Genre Diversity:** Lebih beragam dibanding content-based
-2. **Discovery:** Menemukan anime di genre yang mungkin tidak dipertimbangkan user
-3. **Quality Focus:** Semua rekomendasi memiliki rating tinggi (>7.7)
-4. **Popular Choices:** Rekomendasi anime yang terbukti disukai banyak orang
-
-#### Karakteristik Unik
-- **Serendipity:** Rekomendasi yang mengejutkan tapi relevan
-- **Cross-Genre:** Dari slice of life hingga mecha dan action
-- **Mainstream Appeal:** Fokus pada anime populer dan berkualitas
-
-## Kelebihan Sistem Collaborative Filtering
-
-### 1. User Behavior Based
-- Rekomendasi berdasarkan pola rating user sebenarnya
-- Menangkap preferensi implisit dari perilaku komunitas
-
-### 2. High Quality Recommendations
-- Semua rekomendasi memiliki rating >7.7
-- Anime populer dengan member count tinggi
-
-### 3. Genre Exploration
-- Membantu user menemukan genre baru
-- Diversitas konten yang lebih baik
-
-### 4. Community Wisdom
-- Memanfaatkan "wisdom of crowds"
-- Rekomendasi teruji oleh komunitas besar
-
-## Keterbatasan Sistem
-
-### 1. Cold Start Problem
-- Sulit memberikan rekomendasi untuk user baru
-- Membutuhkan data rating historical
-
-### 2. Popular Bias
-- Cenderung merekomendasikan anime populer
-- Anime niche mungkin terabaikan
-
-### 3. Sparsity Problem
-- Matrix user-item sangat sparse
-- Banyak kombinasi user-anime tanpa rating
-
-### 4. Interpretability
-- Sulit menjelaskan mengapa anime tertentu direkomendasikan
-- Black box approach
-
-## Perbandingan Kedua Sistem
-
-| Aspek | Content-Based | Collaborative Filtering |
-|-------|---------------|------------------------|
-| **Similarity Score** | 0.77-0.96 (Tinggi) | 1.95-3.71 (Relatif) |
-| **Genre Diversity** | Rendah (fokus supernatural/romance) | Tinggi (berbagai genre) |
-| **Quality Range** | 6.14-8.32 | 7.77-9.04 |
-| **Discovery** | Konservatif | Eksplorasi |
-| **Explainability** | Tinggi | Rendah |
-
-## Kesimpulan
-
-Sistem Collaborative Filtering dengan SVD berhasil memberikan rekomendasi anime berkualitas tinggi dengan diversitas genre yang baik. Meskipun predicted rating relatif rendah, ranking menunjukkan preferensi yang akurat berdasarkan pola komunitas pengguna. Sistem ini cocok untuk eksplorasi genre baru dan menemukan anime berkualitas yang mungkin terlewat dengan pendekatan content-based.
 
 # 6. EVALUATION
-# Evaluasi dan Perbandingan Sistem Rekomendasi Anime
 
-## Hasil Evaluasi Sistem Rekomendasi
+## 🧪 **Evaluasi Model Rekomendasi**
 
-### 1. Content-Based Filtering Evaluation
+### 📌 1. **Content-Based Filtering**
 
-#### Metrik Evaluasi
-- **Coverage:** 0.0673 (6.73%)
-- **Success Rate:** 1.0000 (100%)
-- **Total Recommendations:** 500
+* **Metric:** `Precision@10`
+* **Hasil:** **0.6440**
 
-#### Interpretasi Hasil
-- **Coverage 6.73%:** Sistem mampu memberikan rekomendasi untuk 6.73% dari total item dalam dataset
-- **Success Rate 100%:** Semua rekomendasi yang diberikan berhasil (tidak ada kegagalan sistem)
-- **Total 500 Recommendations:** Sistem berhasil menghasilkan 500 rekomendasi
+👉 **Interpretasi**:
 
-### 2. Collaborative Filtering Evaluation
+* Angka **Precision\@10 sebesar 0.6440** berarti bahwa, rata-rata, sekitar **6 hingga 7 dari 10 rekomendasi** yang diberikan oleh sistem content-based relevan dengan preferensi pengguna.
+* Ini adalah performa **cukup baik**, menandakan bahwa fitur-fitur konten lagu (seperti genre, energy, valence, dll.) mampu mengidentifikasi lagu-lagu serupa yang kemungkinan disukai pengguna.
 
-#### Metrik Evaluasi
-- **RMSE:** 7.5269
-- **Number of Test Ratings:** 1268
+---
 
-#### Interpretasi Hasil
-- **RMSE 7.5269:** Root Mean Square Error menunjukkan rata-rata kesalahan prediksi rating
-- **Test Ratings 1268:** Evaluasi dilakukan pada 1268 rating test data
+### 📌 2. **Collaborative Filtering**
 
-## Analisis Performa Sistem
+* **Metric yang digunakan:**
 
-### Content-Based Filtering
+  * **RMSE (Root Mean Squared Error):** 0.6061
+  * **MAE (Mean Absolute Error):** 0.4784
 
-#### Kelebihan
-✅ **Perfect Success Rate (100%)**
-- Tidak ada kegagalan dalam memberikan rekomendasi
-- Sistem stabil dan dapat diandalkan
-- Setiap permintaan rekomendasi dapat dipenuhi
-
-✅ **Konsistensi Tinggi**
-- Rekomendasi selalu tersedia untuk item yang memiliki fitur lengkap
-- Tidak bergantung pada data user lain
-
-#### Kekurangan 
-❌ **Coverage Rendah (6.73%)**
-- Hanya dapat merekomendasikan sebagian kecil dari total anime
-- Keterbatasan pada anime dengan informasi genre yang lengkap
-- Potensi cold start problem untuk anime baru tanpa metadata lengkap
-
-### Collaborative Filtering
-
-#### Kelebihan
-✅ **Evaluasi Komprehensif**
-- Menggunakan metrik RMSE yang standar untuk evaluasi prediksi rating
-- Diuji pada dataset yang cukup besar (1268 test ratings)
-- Dapat memprediksi rating numerik
-
-✅ **Scalability**
-- Dapat memberikan rekomendasi untuk seluruh katalog anime
-- Tidak terbatas oleh ketersediaan metadata
-
-#### Kekurangan
-❌ **RMSE Tinggi (7.5269)**
-- Error prediksi cukup besar dalam skala rating
-- Akurasi prediksi rating masih dapat ditingkatkan
-- Mungkin memerlukan fine-tuning parameter
-
-## Perbandingan Komprehensif
-
-### Tabel Perbandingan Metrik
-
-| Metrik | Content-Based | Collaborative | Interpretasi |
-|--------|---------------|---------------|--------------|
-| **Reliability** | 100% Success Rate | RMSE: 7.5269 | Content-based lebih reliable |
-| **Coverage** | 5.73% | ~100% (implied) | Collaborative lebih comprehensive |
-| **Prediction Accuracy** | N/A | Moderate (RMSE: 7.5) | Collaborative menyediakan prediksi numerik |
-| **Data Dependency** | Metadata only | User-item interactions | Trade-off kompleksitas vs akurasi |
-
-### Analisis Mendalam
-
-#### 1. Coverage Analysis
-```
-Content-Based Coverage = 0.0573
-Total Anime = ~12,294
-Covered Anime ≈ 704 anime
-
-Artinya: Sistem content-based hanya dapat memberikan rekomendasi 
-untuk sekitar 704 dari 12,294 anime dalam dataset.
-```
-
-#### 2. RMSE Analysis
-```
-RMSE = 7.5269
-Rating Scale = 1-10
-Relative Error = 75.3% dari skala penuh
-
-Artinya: Rata-rata kesalahan prediksi rating sekitar 7.5 poin 
-dalam skala 1-10, yang cukup tinggi.
-```
-
-## Rekomendasi Improvement
-
-### Untuk Content-Based System
-
-#### 1. Meningkatkan Coverage
-- **Data Enrichment:** Lengkapi metadata anime yang kosong
-- **Feature Engineering:** Ekstrak fitur tambahan dari synopsis/description
-- **Multi-source Integration:** Gabungkan data dari berbagai sumber
-
-#### 2. Advanced Techniques
-- **TF-IDF Vectorization:** Untuk processing text-based features
-- **Word Embeddings:** Untuk similarity yang lebih semantic
-- **Ensemble Methods:** Kombinasi multiple content-based approaches
-
-### Untuk Collaborative Filtering
-
-#### 1. Menurunkan RMSE
-- **Hyperparameter Tuning:** Optimasi parameter SVD
-- **Regularization:** Tambahkan L1/L2 regularization
-- **Cross-validation:** Systematic parameter search
+👉 **Interpretasi**:
 
-#### 2. Advanced Algorithms
-- **Matrix Factorization Variants:** NMF, SVD++, Neural CF
-- **Deep Learning:** Autoencoders, Neural Collaborative Filtering
-- **Ensemble Methods:** Kombinasi multiple CF algorithms
-
-## Hybrid Recommendation Strategy
-
-### Kombinasi Optimal
-```python
-# Pseudocode Hybrid Approach
-def hybrid_recommendation(user_id, item_id):
-    # Content-based score (reliable but limited coverage)
-    content_score = content_based_score(item_id)
-    
-    # Collaborative score (comprehensive but less accurate)
-    collab_score = collaborative_score(user_id, item_id)
-    
-    # Weighted combination
-    if content_score is not None:
-        # High weight for content when available
-        final_score = 0.7 * content_score + 0.3 * collab_score
-    else:
-        # Fall back to collaborative only
-        final_score = collab_score
-    
-    return final_score
-```
-
-### Keuntungan Hybrid
-1. **Coverage:** Memanfaatkan comprehensive coverage dari collaborative
-2. **Accuracy:** Menggunakan high success rate dari content-based
-3. **Robustness:** Backup system jika salah satu gagal
-4. **Diversity:** Kombinasi similarity dan community preferences
-
-## Kesimpulan dan Rekomendasi
-
-### Pilihan Sistem Berdasarkan Use Case
-
-#### Gunakan Content-Based Jika:
-- Prioritas pada reliability dan consistency
-- Dataset memiliki metadata yang lengkap
-- Explainability penting
-- Cold start problem untuk user baru tidak menjadi masalah
-
-#### Gunakan Collaborative Filtering Jika:
-- Prioritas pada coverage dan discovery
-- Tersedia historical user-item interactions
-- Akurasi prediksi dapat ditoleransi
-- Ingin memanfaatkan wisdom of crowds
-
-#### Gunakan Hybrid System Jika:
-- Ingin mengambil keuntungan dari kedua approach
-- Memiliki resources untuk maintain complexity
-- Dataset cukup lengkap untuk kedua metode
-- Prioritas pada user experience yang optimal
-
-### Next Steps
-1. **Implement Hybrid System** dengan weighted combination
-2. **Improve Data Quality** untuk meningkatkan coverage content-based
-3. **Fine-tune Hyperparameters** untuk menurunkan RMSE collaborative
-4. **A/B Testing** untuk evaluasi real-world performance
-5. **User Feedback Integration** untuk continuous improvement
-
-### 2.  Evaluasi Collaborative Filtering
-- RMSE: 7.5269
-
-  - Root Mean Square Error (RMSE) digunakan untuk mengukur selisih antara rating sebenarnya dan prediksi sistem.
-
-  - RMSE 7.52 cukup tinggi, tapi hal ini bisa terjadi karena:
-
-    - Dataset memiliki rating dalam skala kecil tapi nilai prediksi dalam skala berbeda.
-
-    - Bisa juga karena rating aslinya sparse atau noise cukup besar.
-
-- Number of test ratings: 1268
-
-  - Jumlah pasangan user-anime yang digunakan untuk menguji model collaborative filtering.
-
-  - Angka ini menunjukkan ukuran data uji yang dipakai menghitung RMSE.
-
- Kesimpulan Sementara
-- Content-based filtering: Stabil dan selalu berhasil merekomendasikan, tapi cakupannya terbatas.
-
-- Collaborative filtering: Lebih luas secara potensi rekomendasi, tapi prediksinya masih bisa ditingkatkan (RMSE tinggi).
-
-# 7. FINAL RECOMMENDATIONS DEMO
-# Perbandingan Sistem Rekomendasi untuk Anime 'Death Note'
-
-## Input Query: "Death Note"
-
-**Referensi Anime:**
-- **Judul:** Death Note
-- **Genre:** Drama, Mystery, Police, Psychological, Supernatural, Thriller
-- **Karakteristik:** Anime dengan tema psikologis, misteri, dan supernatural yang kompleks
-
-## Analisis Content-Based Recommendations
-
-### Top 10 Rekomendasi Content-Based
-
-| Rank | Anime | Genre | Rating | Analisis Kesamaan |
-|------|-------|-------|--------|-------------------|
-| 1 | **Mousou Dairinin** | Drama, Mystery, Police, Psychological, Supernatural... | 7.74 | **Perfect Match** - Semua genre utama sama |
-| 2 | **Death Note Kira-ni** | Mystery, Police, Psychological, Supernatural, Thriller... | 7.84 | **Sequel/Related** - Langsung terkait Death Note |
-| 3 | **Higurashi no Naku Koro ni Kai** | Mystery, Psychological, Supernatural, Thriller... | 8.41 | **High Similarity** - Psikologis + supernatural |
-| 4 | **Mirai Nikki (TV)** | Mystery, Psychological, Shounen, Supernatural... | 7.88 | **Strong Match** - Psychological thriller |
-| 5 | **Higurashi no Naku Koro ni Rei** | Comedy, Mystery, Psychological, Supernatural, Thriller... | 7.56 | **Series Continuation** - Higurashi series |
-| 6 | **Monster** | Drama, Horror, Mystery, Police, Psychological, Seinen... | 8.90 | **Excellent Match** - Psychological drama |
-| 7 | **Higurashi no Naku Koro ni** | Horror, Mystery, Psychological, Supernatural, Thriller... | 8.17 | **Strong Similarity** - Horror + psychological |
-| 8 | **Mirai Nikki (TV): Ura Mirai Nikki** | Comedy, Mystery, Psychological, Shounen, Supernatural... | 6.79 | **Related Content** - Mirai Nikki spin-off |
-| 9 | **Zankyou no Terror** | Psychological, Thriller... | 8.26 | **Genre Match** - Psychological thriller |
-| 10 | **Shinsekai Yori** | Drama, Fantasy, Psychological, Supernatural, Thriller... | 7.62 | **Good Match** - Psychological + supernatural |
-
-## Analisis Collaborative Filtering Recommendations
-
-### Top 10 Rekomendasi Collaborative
-
-| Rank | Anime | Genre | Rating | Karakteristik |
-|------|-------|-------|--------|---------------|
-| 1 | **Tonari no Kaibutsu-kun** | Comedy, Romance, School, Shoujo, Slice of Life... | 7.77 | **Genre Berbeda** - Romance/comedy |
-| 2 | **Suzumiya Haruhi no Yuuutsu** | Comedy, Mystery, Parody, School, Sci-Fi, Slice... | 8.66 | **Partial Match** - Mystery element |
-| 3 | **Claymore** | Action, Adventure, Demons, Fantasy, Shounen... | 7.92 | **Supernatural** - Dark fantasy |
-| 4 | **Gintama** | Action, Comedy, Historical, Parody, Samurai, Sci-Fi... | 9.04 | **Genre Berbeda** - Comedy/action |
-| 5 | **Dragon Ball Z** | Action, Adventure, Comedy, Fantasy, Martial Arts... | 8.32 | **Mainstream** - Action/adventure |
-| 6 | **Angel Beats!** | Action, Comedy, Drama, School, Supernatural... | 8.39 | **Some Similarity** - Supernatural drama |
-| 7 | **Kuroko no Basket** | Comedy, School, Shounen, Sports... | 8.46 | **Genre Berbeda** - Sports anime |
-| 8 | **Log Horizon** | Action, Adventure, Fantasy, Game, Magic, Shounen... | 8.14 | **Fantasy** - Game-based |
-| 9 | **Bakemonogatari** | Mystery, Romance, Supernatural, Vampire... | 8.39 | **Good Match** - Mystery + supernatural |
-| 10 | **Code Geass: Hangyaku no Lelouch R2** | Action, Drama, Mecha, Military, Sci-Fi, Super Power... | 8.98 | **Strategic** - Psychological warfare |
-
-## Perbandingan Komprehensif
-
-### 1. Relevansi Genre
-
-#### Content-Based (Sangat Relevan)
-- **Psychological Match:** 9/10 anime memiliki elemen psychological
-- **Mystery/Thriller:** 8/10 anime mengandung mystery atau thriller
-- **Supernatural:** 7/10 anime memiliki elemen supernatural
-- **Average Rating:** 7.89 (kualitas konsisten)
-
-#### Collaborative (Beragam)
-- **Genre Diversity:** Sangat beragam dari romance hingga action
-- **Mystery Elements:** Hanya 2/10 anime dengan mystery kuat
-- **Psychological:** Hanya 1/10 anime dengan fokus psychological
-- **Average Rating:** 8.42 (kualitas lebih tinggi)
-
-### 2. Kualitas Rekomendasi
-
-#### Content-Based Strengths
-✅ **Relevansi Tinggi:** Semua rekomendasi sangat relevan dengan Death Note
-✅ **Konsistensi Genre:** Fokus pada psychological thriller
-✅ **Logical Connections:** Jelas mengapa anime direkomendasikan
-
-#### Content-Based Considerations
-⚠️ **Limited Diversity:** Terbatas pada genre serupa
-⚠️ **Predictable:** Rekomendasi dapat diprediksi
-
-#### Collaborative Strengths
-✅ **High Quality:** Rating rata-rata lebih tinggi (8.42 vs 7.89)
-✅ **Popular Choices:** Anime mainstream yang terbukti disukai
-✅ **Serendipity:** Penemuan anime di genre berbeda
-
-#### Collaborative Considerations
-⚠️ **Low Relevance:** Banyak rekomendasi tidak relevan dengan Death Note
-⚠️ **Genre Mismatch:** Romance/comedy untuk psychological thriller fan
-
-### 3. Analisis Spesifik untuk Death Note Fans
-
-#### Jika Anda Suka Death Note Karena...
-
-**Aspek Psychological:**
-- **Content-Based Winner:** Monster, Higurashi series, Mirai Nikki
-- **Collaborative:** Hanya Bakemonogatari yang relevan
-
-**Aspek Mystery/Detective:**
-- **Content-Based Winner:** Mousou Dairinin, Monster
-- **Collaborative:** Suzumiya Haruhi (partial)
-
-**Aspek Supernatural Thriller:**
-- **Content-Based Winner:** Higurashi series, Shinsekai Yori
-- **Collaborative:** Angel Beats!, Bakemonogatari
-
-**Aspek Strategic Mind Games:**
-- **Content-Based Winner:** Mirai Nikki, Liar Game
-- **Collaborative:** Code Geass (strategic warfare)
-
-## Rekomendasi Berdasarkan Use Case
-
-### Untuk Penggemar Death Note yang Ingin:
-
-#### 1. Anime Sangat Mirip (Content-Based)
-**Top Picks:**
-- **Monster** (8.90) - Psychological masterpiece
-- **Mousou Dairinin** (7.74) - Psychological investigation
-- **Higurashi no Naku Koro ni** (8.17) - Psychological horror
-
-#### 2. Anime Berkualitas Tinggi (Collaborative)
-**Top Picks:**
-- **Code Geass R2** (8.98) - Strategic mastermind
-- **Gintama** (9.04) - Highest rated
-- **Suzumiya Haruhi** (8.66) - Mystery elements
-
-#### 3. Hybrid Approach (Best of Both)
-**Recommended Combination:**
-1. **Monster** - Perfect psychological match
-2. **Code Geass** - Strategic mind games
-3. **Bakemonogatari** - Mystery + supernatural
-4. **Zankyou no Terror** - Psychological thriller
-
-## Kesimpulan
-
-### Sistem Terbaik untuk Death Note:
-**Content-Based Filtering** menang telak untuk query "Death Note" karena:
-
-1. **Relevansi Superior:** 90% rekomendasi sangat relevan
-2. **Genre Consistency:** Fokus pada psychological thriller
-3. **Logical Recommendations:** Setiap rekomendasi masuk akal
-4. **Target Audience:** Cocok untuk penggemar Death Note
-
-### Collaborative Filtering Insights:
-- Memberikan anime berkualitas tinggi tapi kurang relevan
-- Cocok untuk discovery tapi tidak untuk similarity-based search
-- Menunjukkan preferensi umum komunitas anime
-
-### Praktik Terbaik:
-```
-Untuk pencarian berdasarkan anime spesifik:
-→ Gunakan Content-Based sebagai primary
-→ Gunakan Collaborative untuk quality validation
-→ Hybrid approach untuk balance antara relevance dan quality
-```
-
-**Recommendation:** Implementasikan weighted hybrid dimana content-based mendapat bobot lebih tinggi untuk query similarity-based seperti ini.
+* **RMSE (0.6061)** menunjukkan bahwa rata-rata deviasi kuadrat antara rating yang diprediksi dan rating aktual berkisar 0.6.
+* **MAE (0.4784)** menandakan bahwa rata-rata kesalahan absolut dalam prediksi rating hanya sekitar **0.48 poin** dari rating asli (dalam skala biasanya 1–5).
+* Ini menunjukkan bahwa model collaborative filtering cukup **akurat** dalam memprediksi rating pengguna terhadap lagu-lagu yang belum mereka dengar.
+
+---
+
+## ✅ **Kesimpulan Evaluasi**
+
+* **Content-Based Filtering** menunjukkan performa bagus dalam merekomendasikan lagu-lagu serupa yang relevan (precision\@10 > 0.6).
+* **Collaborative Filtering** memiliki **error yang relatif rendah**, menunjukkan prediksi rating yang andal.
+* Keduanya bisa dikombinasikan dalam **hybrid system** untuk memperkuat kelemahan masing-masing: content-based kuat dalam item baru, collaborative kuat dalam menangkap preferensi pengguna yang tidak eksplisit.
+
+--
+
+# 7. RESULTS SUMMARY
+
+
+## ✅ **Ringkasan Hasil Sistem Rekomendasi Musik**
+
+### 🎼 **1. Content-Based Filtering**
+
+* 📌 **Metode**: Menganalisis *kemiripan fitur audio* antar lagu, seperti tempo, energy, valence, danceability, dll.
+* 🎯 **Precision\@10 = 0.6440**
+  Artinya, dari 10 lagu teratas yang direkomendasikan, sekitar **6-7 lagu relevan** dengan lagu target.
+* 💡 **Kelebihan**: Cocok untuk menemukan musik yang mirip secara karakteristik, termasuk jika lagu/artis tersebut baru atau belum banyak didengarkan (mengatasi *cold start*).
+
+### 🧑‍🤝‍🧑 **2. Collaborative Filtering**
+
+* 📌 **Metode**: Mempelajari pola *interaksi pengguna*, seperti rating yang diberikan oleh pengguna-pengguna lain yang mirip.
+* 📉 **RMSE = 0.6061**
+* 📉 **MAE = 0.4784**
+  Keduanya menunjukkan bahwa sistem cukup akurat dalam memprediksi rating pengguna terhadap lagu yang belum mereka dengarkan.
+* 💡 **Kelebihan**: Memberikan rekomendasi yang lebih *personal* berdasarkan preferensi pengguna nyata.
+
+---
+
+### 🔄 **Perbandingan dan Saran Pengembangan**
+
+| Pendekatan              | Kelebihan                                         | Kelemahan                                       |
+| ----------------------- | ------------------------------------------------- | ----------------------------------------------- |
+| **Content-Based**       | Cocok untuk item baru, tidak tergantung user lain | Terbatas pada kemiripan fitur                   |
+| **Collaborative**       | Personal dan dinamis, berbasis interaksi nyata    | Tidak cocok untuk user/item baru (*cold start*) |
+| **Hybrid (Disarankan)** | Gabungan kekuatan keduanya                        | Butuh integrasi yang kompleks                   |
+
+➡️ **Rekomendasi**: Implementasi pendekatan *hybrid* akan memungkinkan sistem:
+
+* Mengatasi cold start (melalui content-based)
+* Memberikan personalisasi tinggi (melalui collaborative filtering)
+
+# 8. EXAMPLE USAGE FUNCTION
+
+
+## 🎧 **Contoh Penggunaan Sistem Rekomendasi**
+
+### 📌 1. **Content-Based Filtering – Rekomendasi untuk Lagu 'Roots'**
+
+Rekomendasi diberikan berdasarkan **kemiripan fitur audio** dengan lagu *'Roots'*.
+
+| Rank | Lagu            | Artis          | Skor Kemiripan |
+| ---- | --------------- | -------------- | -------------- |
+| 1    | I Am the Fire   | Halestorm      | 0.9709         |
+| 2    | Sick Like Me    | In This Moment | 0.9692         |
+| 3    | South Of Heaven | Slayer         | 0.9640         |
+| 4    | BRILLIANT       | Shinedown      | 0.9566         |
+| 5    | No Matter What  | T.I.           | 0.9515         |
+
+👉 **Interpretasi**:
+
+* Sistem berhasil menemukan lagu-lagu yang sangat mirip dari sisi **energi, valence, danceability**, dan atribut audio lainnya.
+* Skor kemiripan yang tinggi (di atas 0.95) menunjukkan bahwa sistem cukup sensitif dalam menangkap karakteristik lagu target.
+
+---
+
+### 📌 2. **Collaborative Filtering – Rekomendasi untuk User ID 5**
+
+* User 5 telah memberikan rating pada **51 lagu** sebelumnya.
+* Sistem menemukan **538 lagu yang belum dirating**, dan menghasilkan **75 prediksi teratas**.
+
+| Rank | Lagu             | Artis                | Prediksi Rating |
+| ---- | ---------------- | -------------------- | --------------- |
+| 1    | Light Up the Sky | Thousand Foot Krutch | 3.6             |
+| 2    | Lysergic Bliss   | of Montreal          | 3.6             |
+| 3    | Sound of Madness | Shinedown            | 3.6             |
+| 4    | BO\$\$           | Fifth Harmony        | 3.6             |
+| 5    | It's Over        | Morrissey            | 3.6             |
+
+👉 **Interpretasi**:
+
+* Rekomendasi ini dihasilkan dari **pola perilaku pengguna lain yang mirip** dengan User 5.
+* Prediksi rating berkisar **3.6**, mengindikasikan lagu-lagu tersebut kemungkinan besar akan disukai user ini.
+* Model dapat menangani pengguna yang memiliki riwayat interaksi (non-cold start).
+
+---
+
+## 🧠 **Manfaat Dua Pendekatan Ini**
+
+| Aspek             | Content-Based                        | Collaborative Filtering                   |
+| ----------------- | ------------------------------------ | ----------------------------------------- |
+| Basis Rekomendasi | Kemiripan fitur lagu                 | Pola interaksi antar pengguna             |
+| Kelebihan         | Cocok untuk lagu/artis baru          | Lebih personal karena berbasis preferensi |
+| Kelemahan         | Terbatas jika fitur tidak informatif | Tidak bisa bekerja tanpa data pengguna    |
+
+# 9. ADDITIONAL ANALYSIS
+
+## 🔍 **Analisis Tambahan**
+
+### 🧠 **Feature Importance (Content-Based Filtering)**
+
+Feature importance menunjukkan fitur mana yang paling berpengaruh dalam menentukan kemiripan lagu.
+
+| 🎵 Fitur         | 🔥 Importance |
+| ---------------- | ------------- |
+| **tempo**        | **824.52**    |
+| **popularity**   | 171.64        |
+| loudness         | 8.93          |
+| acousticness     | 0.06          |
+| valence          | 0.05          |
+| energy           | 0.04          |
+| liveness         | 0.02          |
+| instrumentalness | 0.02          |
+| danceability     | 0.02          |
+| speechiness      | 0.0076        |
+
+📌 **Insight**:
+
+* Fitur **tempo** dan **popularity** sangat dominan dibandingkan fitur lain. Ini berarti sistem lebih banyak merekomendasikan lagu yang memiliki tempo dan popularitas serupa dengan lagu input.
+* Fitur-fitur lain seperti valence, energy, dan danceability hanya memberi pengaruh kecil.
+
+💡 **Saran**: Pertimbangkan untuk melakukan *feature normalization* atau *regularization* jika ingin distribusi pengaruh fitur lebih merata.
+
+---
+
+### 🎧 **Distribusi Genre dalam Rekomendasi**
+
+Untuk lagu ‘Roots’, genre rekomendasi adalah:
+
+* **Alternative**: 4 lagu
+* **Dance**: 1 lagu
+
+📌 **Insight**:
+
+* Rekomendasi cenderung mengarah pada genre yang sama atau mirip, yang sesuai dengan karakteristik sistem content-based.
+* Ini memperkuat bahwa sistem lebih cocok untuk membantu pengguna menemukan lagu *segenre*.
+
+---
+
+### 📊 **Analisis Popularitas**
+
+|                           | Rata-rata Popularitas |
+| ------------------------- | --------------------- |
+| Dataset keseluruhan       | 50.18                 |
+| Rekomendasi content-based | 51.40                 |
+
+📌 **Insight**:
+
+* Lagu yang direkomendasikan memiliki popularitas sedikit di atas rata-rata.
+* Ini menunjukkan sistem cenderung merekomendasikan lagu yang tidak hanya mirip, tetapi juga sedikit lebih populer, yang bisa meningkatkan kepuasan pengguna.
+
+# 10. VISUALIZATION OF RESULTS
+
+##  **1. Distribusi Fitur Audio**
+
+###  Acousticness Distribution
+
+* **Deskripsi:** Menampilkan sebaran nilai `acousticness` dari lagu-lagu yang direkomendasikan.
+* **Insight:** Lagu original memiliki nilai acousticness di sekitar **0.033**, yang ditunjukkan oleh garis putus-putus merah.
+* **Analisis:** Lagu-lagu rekomendasi sebagian besar memiliki nilai acousticness yang sangat rendah, artinya sebagian besar lagu tidak memiliki karakteristik akustik yang kuat. Ini menunjukkan bahwa sistem mencoba mencocokkan karakteristik asli yang juga rendah dalam acousticness.
+
+---
+
+###  Danceability Distribution
+
+* **Deskripsi:** Menampilkan sebaran nilai `danceability` dari lagu-lagu yang direkomendasikan.
+* **Insight:** Lagu original memiliki nilai danceability sekitar **0.42**.
+* **Analisis:** Nilai danceability lagu-lagu rekomendasi cukup bervariasi, tetapi cenderung berada di sekitar nilai lagu original. Artinya, sistem berhasil memilih lagu dengan tingkat kemudahan untuk menari yang serupa.
+
+---
+
+###  Energy Distribution
+
+* **Deskripsi:** Menunjukkan sebaran nilai `energy` lagu-lagu yang direkomendasikan.
+* **Insight:** Lagu original memiliki nilai energy sekitar **0.956**.
+* **Analisis:** Lagu-lagu yang direkomendasikan umumnya memiliki energy tinggi, sebagian besar mendekati nilai energy lagu original. Ini menunjukkan sistem berhasil merekomendasikan lagu dengan intensitas dan semangat yang tinggi.
+
+---
+
+###  Valence Distribution
+
+* **Deskripsi:** Menampilkan sebaran nilai `valence` (keceriaan/positifitas) dari lagu-lagu rekomendasi.
+* **Insight:** Lagu original berada di nilai valence sekitar **0.26**.
+* **Analisis:** Lagu-lagu rekomendasi memiliki valence yang bervariasi tapi semuanya relatif rendah (di bawah 0.3), menunjukkan sistem mempertahankan nuansa emosional lagu asli.
+
+---
+
+##  **2. Evaluasi Sistem Rekomendasi**
+
+### Content-Based Similarity Scores
+
+* **Deskripsi:** Menampilkan skor kemiripan konten antara lagu original dan lima lagu rekomendasi teratas.
+* **Insight:** Skor berada sangat tinggi (\~0.95 ke atas).
+* **Analisis:** Sistem content-based filtering berhasil merekomendasikan lagu-lagu yang sangat mirip dengan lagu original berdasarkan fitur audionya.
+
+---
+
+###  Collaborative Filtering Predicted Ratings
+
+* **Deskripsi:** Menampilkan prediksi rating untuk lima lagu rekomendasi menggunakan collaborative filtering.
+* **Insight:** Prediksi rating mendekati **3.7–3.8** dari skala maksimum (kemungkinan 5).
+* **Analisis:** Berdasarkan preferensi pengguna lain, lagu-lagu rekomendasi diprediksi akan disukai oleh pengguna. Ini menunjukkan bahwa sistem collaborative filtering juga efektif.
+
+---
+
+## **Kesimpulan Umum**
+
+* Sistem rekomendasi Anda menggabungkan dua pendekatan: **content-based filtering** (berdasarkan kemiripan fitur audio) dan **collaborative filtering** (berdasarkan preferensi pengguna lain).
+* Rekomendasi yang dihasilkan cukup konsisten dengan karakteristik lagu asli dalam hal **acousticness, energy, valence**, dan **danceability**.
+* Baik dari segi kemiripan fitur maupun prediksi rating, sistem memberikan hasil yang relevan dan menjanjikan.
+
+# 11. MODEL COMPARISON SUMMARY
+## 📋 **MODEL COMPARISON SUMMARY**
+
+| **Aspect**                    | **Content-Based**                         | **Collaborative Filtering**                        |
+| ----------------------------- | ----------------------------------------- | -------------------------------------------------- |
+| **Data Requirement**          | Hanya membutuhkan fitur dari item (lagu)  | Membutuhkan data interaksi pengguna (rating, klik) |
+| **Cold Start Problem**        | Tidak bermasalah untuk item baru          | Bermasalah untuk pengguna atau item baru           |
+| **Scalability**               | Tinggi (skala linier dengan jumlah item)  | Sedang (bergantung pada operasi matriks)           |
+| **Interpretability**          | Tinggi (berbasis fitur, mudah dijelaskan) | Rendah (sering kali bersifat "black box")          |
+| **Diversity**                 | Rendah (rekomendasi cenderung mirip)      | Tinggi (beragam sesuai preferensi pengguna)        |
+| **Accuracy**                  | Sedang                                    | Tinggi (dengan cukup data)                         |
+| **Implementation Complexity** | Rendah                                    | Sedang                                             |
+
+🧠 **Interpretasi:**
+Kedua model memiliki keunggulan masing-masing. Content-based unggul dalam kasus cold start dan interpretabilitas, sedangkan collaborative filtering lebih unggul dalam akurasi dan keragaman rekomendasi.
+
+---
+
+## 💡 **RECOMMENDATIONS FOR IMPLEMENTATION**
+
+### ✅ **Gunakan Content-Based Filtering untuk:**
+
+* Kasus **cold start** (lagu atau artis baru yang belum memiliki interaksi pengguna)
+* Rekomendasi berdasarkan genre atau fitur khusus
+* Situasi yang membutuhkan **penjelasan** kepada pengguna mengapa sebuah lagu direkomendasikan
+
+### ✅ **Gunakan Collaborative Filtering untuk:**
+
+* Rekomendasi yang sangat **personal** dan kontekstual bagi pengguna
+* Penemuan musik lintas genre berdasarkan preferensi komunitas
+* Situasi dengan data interaksi pengguna yang cukup
+
+### 🔄 **Pendekatan Hybrid (Gabungan):**
+
+* Gabungkan keduanya untuk **hasil terbaik**
+* Gunakan content-based untuk menangani item baru
+* Gunakan collaborative filtering untuk memaksimalkan preferensi pengguna lama
+* Gunakan **weighting dinamis** berdasarkan ketersediaan data (misalnya jika pengguna baru, lebih berat ke content-based)
+
+---
+
+## ✅ **PROJECT COMPLETION SUMMARY**
+
+| **Tahapan**                | **Status**                       |
+| -------------------------- | -------------------------------- |
+| 🔍 Data Understanding      | ✅ Selesai                        |
+| 🛠️ Data Preparation       | ✅ Selesai                        |
+| 🤖 Content-Based Model     | ✅ Diimplementasikan & Dievaluasi |
+| 👥 Collaborative Filtering | ✅ Diimplementasikan & Dievaluasi |
+| ⚖️ Model Comparison        | ✅ Selesai                        |
+| 📊 Visualizations          | ✅ Dibuat                         |
+| 📝 Documentation           | ✅ Lengkap                        |
+
+🚀 **Status Akhir:**
+Sistem rekomendasi musik telah **siap untuk deployment**. Kedua pendekatan menunjukkan kekuatan yang saling melengkapi untuk berbagai skenario penggunaan.
