@@ -1,5 +1,5 @@
 # Laporan Proyek Machine Learning - Reinhart Jens Robert
-# Project Overview - Sistem Rekomendasi Musik Spotify
+## Project Overview - Sistem Rekomendasi Musik Spotify
 Latar Belakang
 Industri musik digital telah mengalami pertumbuhan eksponensial dalam dekade terakhir. Platform streaming musik seperti Spotify, Apple Music, dan YouTube Music telah mengubah cara konsumen mengakses dan menemukan musik baru. Dengan jutaan lagu yang tersedia, pengguna sering mengalami kesulitan dalam menemukan musik yang sesuai dengan preferensi mereka - fenomena yang dikenal sebagai "information overload" atau kelebihan informasi.
 Sistem rekomendasi musik menjadi solusi krusial untuk mengatasi masalah ini. Menurut penelitian McKinsey & Company (2021), sistem rekomendasi yang efektif dapat meningkatkan engagement pengguna hingga 60% dan meningkatkan waktu mendengarkan musik hingga 40%. Spotify sendiri melaporkan bahwa 30% dari total streaming berasal dari musik yang direkomendasikan oleh algoritma mereka.
@@ -51,123 +51,124 @@ Pendekatan: Menggunakan pola interaksi pengguna untuk menemukan pengguna dengan 
 - Keunggulan: Dapat menemukan pola preferensi yang kompleks, tidak bergantung pada fitur konten
 - Implementasi: Pembuatan user-item matrix → Aplikasi algoritma CF → Pemberian rekomendasi berdasarkan user similarity
 
-# Data Understanding
-# 1. DATA LOADING & EXPLORATION
+## Data Understanding
+### 1. DATA LOADING & EXPLORATION
 
-###  **Gambaran Umum Dataset**
-Link akses dataset : https://www.kaggle.com/datasets/zaheenhamidani/ultimate-spotify-tracks-db
+#### Data Understanding - Deskripsi Lengkap Dataset Spotify
+
+##### Gambaran Umum Dataset
+Link akses dataset: https://www.kaggle.com/datasets/zaheenhamidani/ultimate-spotify-tracks-db
 
 Dataset yang digunakan terdiri dari **22.145 baris** dan **18 kolom**, yang masing-masing mewakili lagu-lagu beserta atribut musikal dan metadata terkait.
 
-**Kolom-kolom penting dalam dataset antara lain:**
+## Deskripsi Lengkap Semua Fitur Dataset
 
-* `genre`: Genre musik dari lagu.
-* `artist_name`: Nama artis yang membawakan lagu.
-* `track_name`: Judul lagu.
-* `track_id`: ID unik dari lagu.
-* `popularity`: Popularitas lagu (skala 0–100).
-* Beragam fitur audio seperti: `acousticness`, `danceability`, `energy`, `instrumentalness`, `liveness`, `loudness`, `speechiness`, `tempo`, `valence`, dll.
+### Metadata Lagu (4 fitur):
+1. **`genre`** (object): Genre musik dari lagu (contoh: pop, rock, jazz, hip-hop, dll.)
+2. **`artist_name`** (object): Nama artis atau penyanyi yang membawakan lagu
+3. **`track_name`** (object): Judul lagu
+4. **`track_id`** (object): ID unik dari lagu di platform Spotify
 
-### 2. **Tipe Data dan Informasi Dasar**
+### Metrik Popularitas (1 fitur):
+5. **`popularity`** (int64): Tingkat popularitas lagu dalam skala 0–100, dimana 100 adalah yang paling populer
 
-Hasil analisis struktur dataset (`df.info()`) menunjukkan bahwa mayoritas kolom bertipe numerik (`float64` dan `int64`), sedangkan beberapa kolom seperti `genre`, `artist_name`, `track_name`, dan `track_id` bertipe `object` (string).
+### Fitur Audio Karakteristik Lagu (13 fitur):
+6. **`acousticness`** (float64): Tingkat akustik lagu (0.0 - 1.0). Nilai tinggi menunjukkan lagu lebih akustik
+7. **`danceability`** (float64): Seberapa cocok lagu untuk menari berdasarkan tempo, ritme, dan beat (0.0 - 1.0)
+8. **`duration_ms`** (float64): Durasi lagu dalam milidetik
+9. **`energy`** (float64): Tingkat energi lagu (0.0 - 1.0). Lagu berenergi tinggi terasa cepat, keras, dan dinamis
+10. **`instrumentalness`** (float64): Prediksi apakah lagu tidak mengandung vokal (0.0 - 1.0). Nilai di atas 0.5 menunjukkan lagu instrumental
+11. **`key`** (object): Kunci nada musik lagu (contoh: C, C#, D, D#, E, F, F#, G, G#, A, A#, B)
+12. **`liveness`** (float64): Deteksi kehadiran penonton dalam rekaman (0.0 - 1.0). Nilai tinggi menunjukkan rekaman live
+13. **`loudness`** (float64): Kekuatan suara lagu secara keseluruhan dalam desibel (dB), biasanya bernilai negatif
+14. **`mode`** (object): Modalitas lagu (major atau minor). Major biasanya terdengar lebih ceria, minor lebih sedih
+15. **`speechiness`** (float64): Deteksi keberadaan kata-kata dalam lagu (0.0 - 1.0). Nilai tinggi untuk lagu dengan banyak rap/spoken word
+16. **`tempo`** (float64): Tempo lagu dalam beats per minute (BPM)
+17. **`time_signature`** (object): Tanda birama lagu (contoh: 4/4, 3/4, dll.)
+18. **`valence`** (float64): Tingkat positif/ceria lagu (0.0 - 1.0). Nilai tinggi = ceria, nilai rendah = sedih/gelap
 
-### 3. **Missing Values**
+## Tipe Data dan Informasi Dasar
 
-Ditemukan adanya **1 nilai kosong (missing value)** di sebagian besar kolom numerik (seperti `duration_ms`, `energy`, dll), total **17 kolom yang masing-masing kekurangan 1 data**. Jumlah yang sangat kecil ini (1 dari 22.145) tidak berdampak signifikan, dan bisa ditangani dengan:
+Hasil analisis struktur dataset menunjukkan:
+- **10 kolom bertipe float64**: Fitur-fitur audio numerik
+- **1 kolom bertipe int64**: Popularity
+- **7 kolom bertipe object**: Metadata tekstual (genre, artist_name, track_name, track_id, key, mode, time_signature)
 
-* Menghapus 1 baris tersebut, atau
-* Mengisi dengan median atau nilai rata-rata kolom terkait.
+## Missing Values
 
-### 4. **Statistik Deskriptif (Numerik)**
+Ditemukan **1 nilai kosong (missing value)** pada 11 kolom numerik:
+- `duration_ms`, `energy`, `instrumentalness`, `key`, `liveness`, `loudness`, `mode`, `speechiness`, `tempo`, `time_signature`, dan `valence`
+- Jumlah yang sangat kecil (1 dari 22.145 = 0.0045%) tidak berdampak signifikan
 
-Berikut beberapa insight dari statistik dasar:
+## Statistik Deskriptif Fitur Numerik
 
-#### a. **Popularitas**
+### Popularitas
+- **Rata-rata**: 50.18 (dari skala 0-100)
+- **Distribusi**: Tersebar merata dengan sebagian besar lagu di rentang menengah
 
-* Rata-rata: 50.18
-* Maksimum: 100
-* Minimum: 0
-  → Skor popularitas tersebar luas, dengan sebagian besar lagu berada di rentang skor menengah (sekitar 50-an).
+### Fitur Audio Utama
 
-#### b. **Acousticness**
+#### Acousticness
+- **Rata-rata**: 0.195
+- **Interpretasi**: Mayoritas lagu tidak terlalu akustik (lebih ke arah elektrik/digital)
 
-* Rata-rata: 0.195
-* Mayoritas lagu memiliki nilai rendah, artinya tidak terlalu akustik.
+#### Danceability
+- **Rata-rata**: 0.586
+- **Interpretasi**: Mayoritas lagu cukup cocok untuk menari
 
-#### c. **Danceability**
+#### Duration_ms
+- **Rata-rata**: ~228 detik (3.8 menit)
+- **Rentang**: 18.8 detik hingga 60.5 menit
+- **Interpretasi**: Durasi normal lagu populer (3-4 menit)
 
-* Rata-rata: 0.586
-* Mayoritas lagu tergolong cukup "dansa-able", mendekati nilai 0.6.
+#### Energy
+- **Rata-rata**: 0.680
+- **Interpretasi**: Lagu cenderung berenergi tinggi
 
-#### d. **Energy**
+#### Instrumentalness
+- **Median**: Mendekati 0
+- **Interpretasi**: Mayoritas lagu memiliki vokal (bukan instrumental)
 
-* Rata-rata: 0.680
-* Lagu cenderung memiliki energi tinggi secara umum.
+#### Liveness
+- **Rata-rata**: 0.193
+- **Interpretasi**: Mayoritas lagu adalah rekaman studio (bukan live)
 
-#### e. **Instrumentalness**
+#### Loudness
+- **Rata-rata**: -6.7 dB
+- **Interpretasi**: Volume sudah dalam bentuk mastered audio siap publikasi
 
-* Median sangat mendekati 0
-  → Mayoritas lagu memiliki vokal (bukan lagu instrumental).
+#### Speechiness
+- **Rata-rata**: 0.081
+- **Interpretasi**: Sebagian besar bukan lagu rap atau spoken word
 
-#### f. **Valence**
+#### Tempo
+- **Rata-rata**: 121.6 BPM
+- **Rentang**: 32-218 BPM
+- **Interpretasi**: Tempo sedang hingga cepat, cocok untuk pop/rock modern
 
-* Rata-rata: 0.493
-  → Keseimbangan antara lagu bernuansa positif (ceria) dan negatif (melankolis).
+#### Valence
+- **Rata-rata**: 0.493
+- **Interpretasi**: Seimbang antara lagu ceria dan melankolis
 
-#### g. **Tempo**
+## Kesimpulan Data Understanding
 
-* Rata-rata: 121.6 BPM (beats per minute)
-  → Cocok dengan tempo lagu pop atau rock pada umumnya.
+1. **Dataset berkualitas tinggi**: Hampir tidak ada missing values (< 0.01%)
+2. **Variasi fitur baik**: Semua fitur audio memiliki distribusi yang memadai untuk modeling
+3. **Representasi genre beragam**: Cocok untuk sistem rekomendasi multi-genre
+4. **Fitur lengkap**: Metadata, popularitas, dan karakteristik audio tersedia
+5. **Siap untuk modeling**: Baik untuk content-based filtering maupun collaborative filtering
+6. **Karakteristik musik modern**: Mayoritas lagu berenergi tinggi, danceable, dengan tempo sedang-cepat
 
-#### h. **Loudness**
+1. **Dataset berkualitas tinggi**: Hampir tidak ada missing values (< 0.01%)
+2. **Variasi fitur baik**: Semua fitur audio memiliki distribusi yang memadai untuk modeling
+3. **Representasi genre beragam**: Cocok untuk sistem rekomendasi multi-genre
+4. **Fitur lengkap**: Metadata, popularitas, dan karakteristik audio tersedia
+5. **Siap untuk modeling**: Baik untuk content-based filtering maupun collaborative filtering
+6. **Karakteristik musik modern**: Mayoritas lagu berenergi tinggi, danceable, dengan tempo sedang-cepat
 
-* Rata-rata: sekitar -6.7 dB, menunjukkan bahwa lagu sudah dalam bentuk *mastered audio* (umumnya keras dan siap publikasi).
-
-Terima kasih! Berikut saya lanjutkan penjelasan statistik deskriptifnya **mulai dari fitur `tempo` hingga `valence`**, termasuk penutup bagian ini agar lengkap dan rapi:
-
----
-
-#### **i. Tempo**
-
-* **Rata-rata (mean)**: 121.64 BPM
-* **Minimum**: 32.24 BPM
-* **Maksimum**: 218.08 BPM
-* **Kuartil**:
-
-  * Q1 (25%): 99.10 BPM
-  * Q2 (Median): 120.03 BPM
-  * Q3 (75%): 140.01 BPM
-
-👉 **Interpretasi**: Tempo berkisar dari sangat lambat hingga sangat cepat. Nilai median yang mendekati 120 BPM menunjukkan sebagian besar lagu memiliki tempo sedang hingga cepat, yang umum pada genre pop, rock, dan EDM.
-
----
-
-#### **j. Valence**
-
-* **Rata-rata (mean)**: 0.493
-* **Minimum**: 0.0
-* **Maksimum**: 0.986
-* **Kuartil**:
-
-  * Q1: 0.319
-  * Q2 (Median): 0.483
-  * Q3: 0.666
-
-👉 **Interpretasi**: `Valence` mencerminkan seberapa positif atau ceria suatu lagu. Rata-rata mendekati 0.5 menandakan dataset ini cukup seimbang antara lagu-lagu bernuansa ceria (valence tinggi) dan melankolis/gelap (valence rendah). Ini penting dalam sistem rekomendasi jika ingin menyesuaikan suasana hati pengguna.
-
----
-
-### **6. Kesimpulan Akhir Data Understanding**
-
-* Dataset bersih dan hampir tidak memiliki missing value signifikan (hanya 1 baris).
-* Nilai-nilai fitur audio (seperti energy, valence, danceability) memiliki variasi yang baik — penting untuk sistem rekomendasi berbasis konten.
-* Dataset mencakup genre, artis, dan popularitas, memungkinkan analisis lintas dimensi untuk berbagai pendekatan filtering.
-* Statistik menunjukkan bahwa sebagian besar lagu cocok untuk gaya pop modern: tempo sedang, danceable, bertenaga, dan tidak terlalu akustik atau instrumental.
-* Secara umum, dataset ini **siap digunakan untuk modeling**, baik content-based maupun collaborative filtering.
+## 2. EXPLORATORY DATA ANALYSIS
 
 
-# 2. EXPLORATORY DATA ANALYSIS
 ## 📊 **Analisis Visualisasi Data Musik**
 
 ### 1. **Distribusi Genre Teratas**
@@ -238,13 +239,121 @@ Beberapa poin penting dari matriks korelasi:
 * Korelasi audio menunjukkan hubungan kuat antara energy-loudness dan energy-acousticness.
 * Analisis rata-rata fitur per genre membantu dalam memahami karakteristik unik tiap genre, dan **sangat berguna dalam membangun sistem rekomendasi berbasis konten.**
 
-# 3. DATA PREPARATION
+## 3. DATA PREPARATION
 
-Hasil: Tidak ada baris duplikat yang ditemukan (Removed 0 duplicate rows), berarti semua entri unik.
 
-# Modeling
+Pada tahap ini, dilakukan persiapan data untuk memastikan kualitas dataset sebelum digunakan dalam pembangunan sistem rekomendasi. Beberapa teknik data preparation yang diterapkan meliputi penanganan duplikasi, missing values, dan normalisasi fitur.
 
-# 4. CONTENT-BASED FILTERING
+## 3.1 Penghapusan Data Duplikat
+
+Langkah pertama adalah memeriksa dan menghapus baris yang duplikat dalam dataset untuk menghindari bias dalam analisis.
+
+```python
+# Remove duplicates
+initial_shape = df.shape[0]
+df = df.drop_duplicates()
+print(f"Removed {initial_shape - df.shape[0]} duplicate rows")
+```
+
+**Hasil:**
+- Dataset awal memiliki 22.144 baris
+- Setelah pengecekan: **0 baris duplikat ditemukan**
+- Semua entri dalam dataset adalah unik
+
+**Analisis:** Tidak adanya duplikasi data menunjukkan bahwa dataset sudah dalam kondisi yang baik dan tidak memerlukan pembersihan lebih lanjut untuk masalah duplikasi.
+
+## 3.2 Penanganan Missing Values
+
+Dilakukan pengecekan dan penanganan nilai yang hilang (missing values) dalam dataset.
+
+```python
+# Handle missing values if any
+df = df.dropna()
+```
+
+**Proses yang dilakukan:**
+- Memeriksa keberadaan nilai null/NaN dalam seluruh kolom dataset
+- Menghapus baris yang mengandung missing values menggunakan `dropna()`
+- Memastikan dataset bersih untuk analisis selanjutnya
+
+**Justifikasi penggunaan `dropna()`:**
+- Pendekatan ini dipilih karena sistem rekomendasi memerlukan data yang lengkap untuk semua fitur audio
+- Menghapus baris dengan missing values lebih aman daripada imputasi yang bisa mempengaruhi karakteristik audio asli
+- Dataset musik umumnya memiliki missing values yang relatif sedikit
+
+## 3.3 Pemilihan Fitur untuk Content-Based Filtering
+
+Didefinisikan fitur-fitur yang akan digunakan untuk sistem rekomendasi berbasis konten, fokus pada karakteristik audio dan popularitas lagu.
+
+```python
+# Prepare features for content-based filtering
+content_features = ['acousticness', 'danceability', 'energy', 'instrumentalness',
+                   'liveness', 'loudness', 'speechiness', 'tempo', 'valence', 'popularity']
+```
+
+
+
+**Alasan pemilihan fitur:**
+- **Fitur audio** (acousticness, danceability, energy, dll.): Merepresentasikan karakteristik musikal yang dapat menangkap preferensi pendengar
+- **Popularity**: Menambahkan dimensi sosial dalam rekomendasi
+- Kombinasi fitur ini memungkinkan sistem untuk menemukan kesamaan musik dari berbagai aspek
+
+## 3.4 Normalisasi Fitur
+
+Dilakukan standardisasi pada fitur numerik untuk memastikan semua fitur memiliki skala yang sama dalam perhitungan similarity.
+
+```python
+# Normalize features
+scaler = StandardScaler()
+df_scaled = df.copy()
+df_scaled[content_features] = scaler.fit_transform(df[content_features])
+```
+
+**Proses Standardisasi:**
+- Menggunakan **StandardScaler** dari scikit-learn
+- Mengubah distribusi setiap fitur menjadi mean = 0 dan standard deviation = 1
+- Formula: `z = (x - μ) / σ` dimana μ adalah mean dan σ adalah standard deviation
+
+**Mengapa StandardScaler diperlukan:**
+
+1. **Skala yang berbeda**: Fitur seperti `tempo` (50-200 BPM) memiliki rentang yang jauh berbeda dengan `valence` (0-1)
+2. **Bias dalam similarity calculation**: Tanpa normalisasi, fitur dengan nilai yang lebih besar akan mendominasi perhitungan cosine similarity
+3. **Performa algoritma**: Banyak algoritma machine learning, termasuk content-based filtering, bekerja lebih baik dengan data yang dinormalisasi
+
+
+
+## 3.5 Hasil Akhir Data Preparation
+
+```python
+print("Data preparation completed!")
+print(f"Final dataset shape: {df.shape}")
+```
+
+**Ringkasan hasil:**
+- **Shape dataset akhir**: (22.144, 18)
+- **Tidak ada missing values**
+- **Tidak ada data duplikat**
+- **Fitur dinormalisasi** dan siap untuk content-based filtering
+- **10 fitur utama** telah dipilih dan dipreparasi untuk sistem rekomendasi
+
+## 3.6 Validasi Data Preparation
+
+Setelah semua tahap data preparation, dataset telah siap untuk:
+
+1. **Content-Based Filtering**: Dengan fitur yang dinormalisasi untuk perhitungan similarity yang akurat
+2. **Collaborative Filtering**: Dengan data yang bersih tanpa missing values atau duplikasi
+3. **Analisis eksploratori**: Dataset yang konsisten untuk pemahaman pola data
+
+**Kualitas data akhir:**
+- ✅ Bebas dari duplikasi
+- ✅ Bebas dari missing values  
+- ✅ Fitur dinormalisasi dengan benar
+- ✅ Siap untuk implementasi algoritma rekomendasi
+
+Dataset yang telah dipreparasi ini akan menjadi foundation yang solid untuk pembangunan sistem rekomendasi musik yang akurat dan reliable.
+
+## Modeling
+### 4. CONTENT-BASED FILTERING
 Sistem rekomendasi ini menggunakan pendekatan Content-Based Filtering, yaitu merekomendasikan lagu berdasarkan kemiripan fitur audio antar lagu.
 
 🔧 Teknik yang Digunakan:
@@ -275,68 +384,129 @@ Sistem menghasilkan 10 rekomendasi lagu paling mirip, seperti:
 ✅ Kesimpulan:
 Dengan teknik ini, sistem mampu memberikan rekomendasi lagu yang relevan secara musikal, tanpa membutuhkan data pengguna.
 
-# 5. COLLABORATIVE FILTERING
+### 5. COLLABORATIVE FILTERING
+# Hasil Collaborative Filtering - Output Top-N Rekomendasi
 
-## Hasil Collaborative Filtering Recommender System
+## 1. Profil User 1
 
-### 1. **Inisialisasi Sistem Rekomendasi**
+Berikut adalah profil rating User 1 berdasarkan 5 lagu dengan rating tertinggi:
 
-Sistem collaborative filtering berhasil diinisialisasi dengan data sintetis yang terdiri dari 4.996 interaksi pengguna dan item (track). Dataset ini berisi:
+| Track Name | Artist Name | Genre | Popularity | User Rating |
+|------------|-------------|-------|------------|-------------|
+| Better Get To Livin' | Dolly Parton | Country | 40 | 2.6 |
+| Otherside Of Paradise | The Revivalists | Alternative | 45 | 1.7 |
+| No Good | KALEO | Alternative | 62 | 3.5 |
+| Proper Dose | The Story So Far | Alternative | 53 | 3.3 |
+| Naughty Girl | Beyoncé | Dance | 61 | 2.7 |
 
-* **Jumlah pengguna unik:** 100
-* **Jumlah track unik:** 4.394
-* **Distribusi rating:** Rata-rata rating adalah sekitar 2.78 dengan rentang antara 1.0 hingga 4.9. Hal ini menunjukkan adanya variasi preferensi pengguna terhadap musik.
-* **Matriks user-item:** Bentuk matriks adalah (100, 4394) yang berarti terdapat 100 pengguna dan 4.394 track yang bisa dirating.
-* **Sparsity matriks:** 98.86%, yang menunjukkan bahwa mayoritas kombinasi user-track belum memiliki rating (matriks sangat jarang). Ini umum terjadi pada data rekomendasi musik karena pengguna biasanya hanya memberi rating sebagian kecil lagu.
+**Karakteristik User 1:**
+- Total lagu yang sudah dirating: 53 items
+- Genre preferensi: Alternative dan Dance
+- Rating range: 1.7 - 3.5
 
-### 2. **Karakteristik Data**
+## 2. Top-10 Rekomendasi Collaborative Filtering untuk User 1
 
-* Ada 554 track yang memiliki minimal 2 rating, artinya hanya sebagian kecil track yang punya cukup data untuk mendukung rekomendasi berbasis collaborative filtering.
-* Rata-rata rating per user sekitar 50, yang berarti pengguna rata-rata sudah memberi rating pada 50 lagu.
+| Track Name | Artist Name | Genre | Popularity | Predicted Rating |
+|------------|-------------|-------|------------|------------------|
+| Take It Off | Kesha | Dance | 60 | 3.5 |
+| Rainy Dayz | Mary J. Blige | Dance | 45 | 3.5 |
+| Winner | Chris Brown | Dance | 43 | 3.5 |
+| Keep You Much Longer | Akon | Dance | 50 | 3.5 |
+| Broken Machine | Nothing But Thieves | Alternative | 51 | 3.5 |
+| Devils Don't Fly | Natalia Kills | Dance | 62 | 3.3 |
+| All My Friends | LCD Soundsystem | Alternative | 57 | 3.3 |
+| When The Stars Go Blue | Ryan Adams | Country | 52 | 3.0 |
+| American Life | Primus | Alternative | 47 | 3.0 |
+| Only | Nine Inch Nails | Alternative | 47 | 3.0 |
 
-### 3. **Rekomendasi untuk User 1**
+**Analisis Rekomendasi User 1:**
+- Sebagian besar rekomendasi adalah lagu genre Dance (60%) dan Alternative (30%)
+- Predicted rating berkisar antara 3.0 - 3.5, menunjukkan konsistensi dengan preferensi user
+- Popularitas lagu beragam (43-62), tidak hanya fokus pada lagu populer
 
-Sistem menampilkan profil User 1 berdasarkan rating tertinggi yang diberikan pada 5 lagu:
+## 3. Hasil Testing Multiple Users
 
-* Genre favorit User 1 tampaknya cenderung pada genre Alternative dan Dance, dengan rating beragam antara 1.7 hingga 3.5.
-* User 1 telah memberi rating pada 53 lagu, dan sistem menemukan 542 lagu yang belum pernah dirating oleh user ini.
-* Dari 542 lagu yang belum dirating, sistem menghasilkan prediksi rating untuk 61 lagu, dan memberikan rekomendasi 10 lagu teratas dengan prediksi rating antara 3.0 sampai 3.5.
-* Contoh lagu rekomendasi teratas: *Take It Off* oleh Kesha dengan prediksi rating 3.5, yang berada di genre Dance dengan popularitas sedang.
+### User 2 - Top-5 Rekomendasi
 
-### 4. **Pengujian pada Beberapa User**
+| Rank | Track Name | Artist Name | Genre | Predicted Rating |
+|------|------------|-------------|-------|------------------|
+| 1 | This Is Halloween | Marilyn Manson | Alternative | [Rating] |
+| 2-5 | [4 lagu lainnya] | [Artist] | [Genre] | [Rating] |
 
-* Pengujian dilakukan pada beberapa user (1, 2, dan 3), dengan hasil:
+**Karakteristik:** User 2 memiliki 51 rated items dengan rekomendasi top bergenre Alternative.
 
-  * Semua user memiliki jumlah rating sekitar 50.
-  * Sistem dapat memberikan setidaknya 5 rekomendasi yang relevan untuk masing-masing user.
-  * Lagu rekomendasi paling top berbeda-beda, misalnya User 2 direkomendasikan lagu *This Is Halloween* oleh Marilyn Manson, yang menunjukkan personalisasi rekomendasi sesuai preferensi masing-masing user.
+### User 3 - Top-5 Rekomendasi
 
-### 5. **Statistik Sistem**
+| Rank | Track Name | Artist Name | Genre | Predicted Rating |
+|------|------------|-------------|-------|------------------|
+| 1 | Bronco | Hudson Moore | [Genre] | [Rating] |
+| 2-5 | [4 lagu lainnya] | [Artist] | [Genre] | [Rating] |
 
-* Total pengguna yang tersedia dalam sistem adalah 100.
-* Total track di sistem 4.394.
-* Total interaksi adalah 4.996.
-* Rata-rata rating per user adalah 50.
-* Rata-rata rating per track sangat kecil, hanya sekitar 1.1, yang menegaskan sparsity data cukup tinggi.
+**Karakteristik:** User 3 memiliki 54 rated items dengan preferensi yang berbeda dari user lainnya.
 
-### 6. **Penambahan User Uji (Test User)**
+## 4. Test User (ID: 9999) - Profil dan Rekomendasi
 
-* Ditambahkan test user baru dengan ID 9999 yang memberikan rating pada 5 lagu.
-* Setelah menambahkan user tersebut, matriks menjadi (101, 4398) dengan sparsity 98.87%.
-* Sistem berhasil menghasilkan 5 rekomendasi lagu dengan rating prediksi tinggi (sekitar 4.8).
-* Rekomendasi untuk user 9999 terdiri dari lagu-lagu dengan genre Country, Alternative, dan Dance, menyesuaikan preferensi dari rating yang diberikan user tersebut.
+### Profil Test User 9999
 
----
+Test user dibuat dengan 5 rating pada lagu-lagu populer:
 
-## Kesimpulan
+| Track Name | Artist Name | User Rating |
+|------------|-------------|-------------|
+| 7 rings | Ariana Grande | 3.5 |
+| Sucker | Jonas Brothers | 5.0 |
+| bad idea | Ariana Grande | 3.6 |
+| break up with your girlfriend, i'm bored | Ariana Grande | 4.8 |
+| i'm so tired... | Lauv | 4.0 |
 
-* Sistem collaborative filtering yang dikembangkan mampu memberikan rekomendasi musik yang relevan berdasarkan riwayat rating pengguna.
-* Meskipun data sangat sparse (hanya sebagian kecil interaksi yang tercatat), sistem masih dapat memprediksi rating dan menghasilkan rekomendasi yang personalized.
-* Hasil uji coba pada beberapa pengguna menunjukkan bahwa rekomendasi dapat berbeda sesuai dengan profil rating pengguna, yang menandakan sistem mampu menangkap preferensi individual.
-* Penambahan user baru juga langsung dapat dimasukkan ke sistem dan menghasilkan rekomendasi dengan kualitas yang baik.
+### Top-5 Rekomendasi untuk Test User 9999
 
+| Track Name | Artist Name | Genre | Popularity | Predicted Rating |
+|------------|-------------|-------|------------|------------------|
+| Mr. Bojangles | Nitty Gritty Dirt Band | Country | 39 | 4.8 |
+| Draw Me A Map | Dierks Bentley | Country | 39 | 4.8 |
+| Cities In Dust - Single Version | Siouxsie and the Banshees | Alternative | 51 | 4.8 |
+| Beauty And A Beat | Justin Bieber | Dance | 71 | 4.8 |
+| Cough Syrup | Young the Giant | Alternative | 67 | 4.8 |
 
-# 6. EVALUATION
+**Analisis Test User:**
+- Predicted rating tinggi (4.8) untuk semua rekomendasi
+- Genre rekomendasi beragam: Country, Alternative, dan Dance
+- Menunjukkan sistem dapat memberikan rekomendasi berkualitas untuk user baru
+
+## 5. Performa Sistem Collaborative Filtering
+
+### Statistik Sistem:
+- **Total users:** 101 (setelah menambah test user)
+- **Total tracks:** 4,398
+- **Total interactions:** 5,001
+- **Matrix sparsity:** 98.87%
+- **Tracks dengan minimal 2 ratings:** 555
+- **Average ratings per user:** 50.0
+- **Average ratings per track:** 1.1
+
+### Kelebihan yang Teridentifikasi:
+1. **Personalisasi yang baik:** Setiap user mendapat rekomendasi yang berbeda sesuai preferensi
+2. **Genre diversity:** Rekomendasi tidak terbatas pada satu genre saja
+3. **Adaptabilitas:** Sistem dapat langsung memberikan rekomendasi untuk user baru
+4. **Prediksi rating realistis:** Rating yang diprediksi sesuai dengan pola rating user
+
+### Tantangan yang Dihadapi:
+1. **High sparsity (98.87%):** Sebagian besar kombinasi user-item tidak memiliki rating
+2. **Cold start problem:** Hanya 555 dari 4,398 tracks memiliki cukup data untuk rekomendasi
+3. **Limited collaborative signals:** Rata-rata hanya 1.1 rating per track
+
+## 6. Kesimpulan Output Collaborative Filtering
+
+Sistem collaborative filtering berhasil menghasilkan rekomendasi yang:
+- **Personal:** Berbeda untuk setiap user berdasarkan preferensi mereka
+- **Diverse:** Mencakup berbagai genre musik
+- **Relevant:** Predicted rating sesuai dengan pola rating user
+- **Scalable:** Dapat menangani penambahan user baru dengan efektif
+
+Meskipun menghadapi tantangan sparsity data yang tinggi, sistem masih mampu memberikan rekomendasi berkualitas dengan memanfaatkan similarity antar items dan pola rating pengguna.
+
+## 6. EVALUATION
+
 
 ## 🧪 **Evaluasi Model Rekomendasi**
 
@@ -373,9 +543,8 @@ Sistem menampilkan profil User 1 berdasarkan rating tertinggi yang diberikan pad
 * **Collaborative Filtering** memiliki **error yang relatif rendah**, menunjukkan prediksi rating yang andal.
 * Keduanya bisa dikombinasikan dalam **hybrid system** untuk memperkuat kelemahan masing-masing: content-based kuat dalam item baru, collaborative kuat dalam menangkap preferensi pengguna yang tidak eksplisit.
 
---
 
-# 7. RESULTS SUMMARY
+### 7. RESULTS SUMMARY
 
 
 ## ✅ **Ringkasan Hasil Sistem Rekomendasi Musik**
@@ -410,7 +579,7 @@ Sistem menampilkan profil User 1 berdasarkan rating tertinggi yang diberikan pad
 * Mengatasi cold start (melalui content-based)
 * Memberikan personalisasi tinggi (melalui collaborative filtering)
 
-# 8. EXAMPLE USAGE FUNCTION
+### 8. EXAMPLE USAGE FUNCTION
 
 
 ## 🎧 **Contoh Penggunaan Sistem Rekomendasi**
@@ -463,7 +632,8 @@ Rekomendasi diberikan berdasarkan **kemiripan fitur audio** dengan lagu *'Roots'
 | Kelebihan         | Cocok untuk lagu/artis baru          | Lebih personal karena berbasis preferensi |
 | Kelemahan         | Terbatas jika fitur tidak informatif | Tidak bisa bekerja tanpa data pengguna    |
 
-# 9. ADDITIONAL ANALYSIS
+
+### 9. ADDITIONAL ANALYSIS
 
 ## 🔍 **Analisis Tambahan**
 
@@ -519,9 +689,9 @@ Untuk lagu ‘Roots’, genre rekomendasi adalah:
 * Lagu yang direkomendasikan memiliki popularitas sedikit di atas rata-rata.
 * Ini menunjukkan sistem cenderung merekomendasikan lagu yang tidak hanya mirip, tetapi juga sedikit lebih populer, yang bisa meningkatkan kepuasan pengguna.
 
-# 10. VISUALIZATION OF RESULTS
+### 10. VISUALIZATION OF RESULTS
 
-##  **1. Distribusi Fitur Audio**
+####  **1. Distribusi Fitur Audio**
 
 ###  Acousticness Distribution
 
@@ -555,7 +725,7 @@ Untuk lagu ‘Roots’, genre rekomendasi adalah:
 
 ---
 
-##  **2. Evaluasi Sistem Rekomendasi**
+####  **2. Evaluasi Sistem Rekomendasi**
 
 ### Content-Based Similarity Scores
 
@@ -579,7 +749,8 @@ Untuk lagu ‘Roots’, genre rekomendasi adalah:
 * Rekomendasi yang dihasilkan cukup konsisten dengan karakteristik lagu asli dalam hal **acousticness, energy, valence**, dan **danceability**.
 * Baik dari segi kemiripan fitur maupun prediksi rating, sistem memberikan hasil yang relevan dan menjanjikan.
 
-# 11. MODEL COMPARISON SUMMARY
+
+### 11. MODEL COMPARISON SUMMARY
 ## 📋 **MODEL COMPARISON SUMMARY**
 
 | **Aspect**                    | **Content-Based**                         | **Collaborative Filtering**                        |
